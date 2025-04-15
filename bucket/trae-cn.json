@@ -1,5 +1,5 @@
 {
-    "version": "1.0.11316",
+    "version": "1.0.11472",
     "description": "Trae 是国内首个 AI IDE，深度理解中文开发场景。AI 高度集成于 IDE 环境之中，为你带来比 AI 插件更加流畅、准确、优质的开发体验。",
     "homepage": "https://www.trae.com.cn/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/1.0.11316/win32/Trae%20CN-Setup-x64.exe",
-            "hash": "7df01d10d74f739b8499a37aa1a1a077472fee06027c5de92215c24810b715c5"
+            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/1.0.11472/win32/Trae%20CN-Setup-x64.exe",
+            "hash": "7fbbcae803ee1d045c61f850d584530b84bc973acbd195353058e8a40e1e339c"
         }
     },
     "innosetup": true,
