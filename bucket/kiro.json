@@ -4,7 +4,7 @@
     "homepage": "https://kiro.dev/",
     "license": {
         "identifier": "Proprietary",
-        "url": "https://aws.amazon.com/service-terms/"
+        "url": "https://kiro.dev/license/"
     },
     "architecture": {
         "64bit": {
