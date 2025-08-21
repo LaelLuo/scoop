@@ -40,10 +40,6 @@
         [
             "bun.exe",
             "node"
-        ],
-        [
-            "bun.exe",
-            "npm"
         ]
     ],
     "checkver": {
