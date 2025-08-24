@@ -8,7 +8,7 @@
     "version": "7.50.9",
     "architecture": {
         "64bit": {
-            "url": "https://lf9-ug-sign.feishucdn.com/ee-appcenter/b829f649/Feishu-win32_x64-7.50.9-signed.exe#/feishu-7.50.9.7z",
+            "url": "https://sf3-cn.feishucdn.com/obj/ee-appcenter/b829f649/Feishu-win32_x64-7.50.9-signed.exe#/feishu-7.50.9.7z",
             "hash": "md5:ca3cd85c670fefda8fdd9cfdf57536eb"
         }
     },
@@ -82,8 +82,8 @@
     ],
     "persist": "data",
     "checkver": {
-        "url": "https://www.feishu.cn/api/package_info?platform=16",
-        "jsonpath": "$.data.download_link",
+        "url": "https://www.feishu.cn/api/downloads",
+        "jsonpath": "$.versions.Windows_x64.download_link",
         "regex": "(?<url>.*Feishu-win32_x64-(?<version>[\\d.]+)-signed\\.exe)",
         "replace": "${version}"
     },
@@ -94,8 +94,8 @@
             }
         },
         "hash": {
-            "url": "https://www.feishu.cn/api/package_info?platform=16",
-            "jsonpath": "$.data.hash"
+            "url": "https://www.feishu.cn/api/downloads",
+            "jsonpath": "$.versions.Windows_x64.hash"
         }
     },
     "notes": [
