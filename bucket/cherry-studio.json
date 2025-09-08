@@ -1,0 +1,74 @@
+{
+    "version": "1.5.9",
+    "description": "A desktop client that supports for multiple LLM providers.",
+    "homepage": "https://cherry-ai.com",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.5.9/Cherry-Studio-1.5.9-x64-setup.exe#/dl.7z",
+            "hash": "sha512:11a3b33064a64f026f6e27723986a7e931cfac0bf058e1bb02f48069f05f446375ee11515fb3680e9ff87fee2873b5b8e84c6dd3f362416df077226f4b808c55",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
+        },
+        "arm64": {
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.5.9/Cherry-Studio-1.5.9-arm64-setup.exe#/dl.7z",
+            "hash": "9681b4ecba26065ec31f2f2941abc834aac39f6422d1bbbe07b5e087239d6528",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\""
+        }
+    },
+    "shortcuts": [
+        [
+            "Cherry Studio.exe",
+            "Cherry Studio"
+        ]
+    ],
+    "post_install": [
+        "# Clean installer leftovers (from 7zip extraction)",
+        "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse",
+        "",
+        "# Portable mode: create data directories",
+        "New-Item -ItemType Directory -Path \"$dir\\data\" -Force | Out-Null",
+        "New-Item -ItemType Directory -Path \"$dir\\data\\user-data\" -Force | Out-Null",
+        "",
+        "# Copy existing user data on first run",
+        "if ((Test-Path \"$env:AppData\\CherryStudio\") -and !(Test-Path \"$dir\\data\\user-data\\*\")) {",
+        "  info '[Portable Mode] Copying existing user data...'",
+        "  Copy-Item \"$env:AppData\\CherryStudio\\*\" \"$dir\\data\\user-data\" -Recurse -Force",
+        "}",
+        "",
+        "# Create junction to redirect APPDATA",
+        "$appDataPath = \"$env:AppData\\CherryStudio\"",
+        "if (Test-Path $appDataPath) { Remove-Item $appDataPath -Force }",
+        "try {",
+        "  New-Item -ItemType Junction -Path $appDataPath -Target \"$dir\\data\\user-data\" -Force | Out-Null",
+        "  info '[Portable Mode] Created junction: %APPDATA%\\CherryStudio -> scoop\\data\\user-data'",
+        "} catch {",
+        "  warn '[Portable Mode] Failed to create junction for user data: $_'",
+        "}"
+    ],
+    "pre_uninstall": [
+        "# Clean up junction point",
+        "$appDataPath = \"$env:AppData\\CherryStudio\"",
+        "if (Test-Path $appDataPath) {",
+        "  Remove-Item $appDataPath -Force",
+        "  info '[Portable Mode] Removed junction: %APPDATA%\\CherryStudio'",
+        "}"
+    ],
+    "persist": "data",
+    "checkver": {
+        "github": "https://github.com/CherryHQ/cherry-studio"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-x64-setup.exe#/dl.7z",
+                "hash": {
+                    "url": "$baseurl/latest.yml",
+                    "regex": "sha512: $base64"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-arm64-setup.exe#/dl.7z"
+            }
+        }
+    }
+}
