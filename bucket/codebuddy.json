@@ -21,7 +21,7 @@
     "architecture": {
         "64bit": {
             "url": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/aiide/win32-x64-user/CodeBuddy-win32-x64-user-0.2.2.6908185-65920868.exe",
-            "hash": "2deb26d110cef9114691bc9160cfc53f1a96acc164b06f64e3b408e0f723259f"
+            "hash": "48daf1bcace37458f3a16cc2bc564b2573f8c34f455be97b767abf8cce962e39"
         }
     },
     "innosetup": true,

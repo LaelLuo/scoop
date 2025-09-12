@@ -1,5 +1,5 @@
 {
-    "version": "0.49.2",
+    "version": "0.49.41-alpha",
     "description": "Local-first, E2E encrypted software for creating and storing tasks, notes, ideas, documents, workflows, and more.",
     "homepage": "https://anytype.io/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/anyproto/anytype-ts/releases/download/v0.49.2/Anytype.Setup.0.49.2.exe#/dl.7z",
-            "hash": "111648eb5b4a4d557d94329eed3581fd16e0124db963417b827728044dac38af",
+            "url": "https://github.com/anyproto/anytype-ts/releases/download/v0.49.41-alpha/Anytype.Setup.0.49.41-alpha.exe#/dl.7z",
+            "hash": "9ef7df40bf13756f275007b7302355ca1969b2b509b31624a1e587e67f2d7532",
             "pre_install": [
                 "Remove-Item \"$dir\\resources\" -Recurse",
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
@@ -75,7 +75,7 @@
     "checkver": {
         "url": "https://api.github.com/repos/anyproto/anytype-ts/releases/latest",
         "jsonpath": "$.tag_name",
-        "regex": "v([\\d.]+)"
+        "regex": "v([\\d.]+(?:-[A-Za-z0-9.-]+)?)"
     },
     "autoupdate": {
         "architecture": {
