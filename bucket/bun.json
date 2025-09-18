@@ -39,6 +39,11 @@
         ],
         [
             "bun.exe",
+            "npx",
+            "x"
+        ],
+        [
+            "bun.exe",
             "node"
         ],
         [
