@@ -1,12 +1,12 @@
 {
-    "version": "0.30.1",
+    "version": "0.30.2",
     "description": "Open source realtime backend in 1 file",
     "homepage": "https://pocketbase.io/",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/pocketbase/pocketbase/releases/download/v0.30.1/pocketbase_0.30.1_windows_amd64.zip",
-            "hash": "475dab197dea0d42b576a6cfb533a918af2877a2e656acd4b0f2e877ff543139"
+            "url": "https://github.com/pocketbase/pocketbase/releases/download/v0.30.2/pocketbase_0.30.2_windows_amd64.zip",
+            "hash": "ee336479c35ac3330e6d913734f0d248ba6cfdbbc2923aa03db2bf7e4b04c1b3"
         }
     },
     "bin": "pocketbase.exe",
