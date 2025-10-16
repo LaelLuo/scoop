@@ -74,8 +74,7 @@
         "      info \"[Cherry Studio] Linked bun -> $bunTarget\"",
         "    } catch {",
         "      warn \"[Cherry Studio] Symlink bun failed, creating shim: $_\"",
-        "      $shimContent = '@echo off' + 
- + '\"' + $bunTarget + '\" %*'",
+        "      $shimContent = '@echo off' + \"`n\" + '\"' + $bunTarget + '\" %*'",
         "      Set-Content -Path $bunShim -Value $shimContent -Encoding Ascii",
         "    }",
         "  }",
@@ -100,8 +99,7 @@
         "      info \"[Cherry Studio] Linked $name -> $target\"",
         "    } catch {",
         "      warn \"[Cherry Studio] Symlink $name failed, creating shim: $_\"",
-        "      $shimContent = '@echo off' + 
- + '\"' + $target + '\" %*'",
+        "      $shimContent = '@echo off' + \"`n\" + '\"' + $target + '\" %*'",
         "      Set-Content -Path $cmdPath -Value $shimContent -Encoding Ascii",
         "    }",
         "  } else {",
