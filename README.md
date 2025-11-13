@@ -53,6 +53,23 @@ Get-ChildItem bucket | Select-Object -ExpandProperty Name
 - `bin/formatjson.ps1 <manifest>`：统一 JSON 排版，保持字段顺序一致。
 - 复杂的便携化模式可参考现有清单（如 `oomol.json`、`cursor.json`、`puro.json` 等）实现。
 
+### `src → bucket` 构建流程
+
+- `src/bucket/*.json[c]` 是**源文件**，可在其中使用注释、模板变量，以及新增的 `portableProfile` 字段描述便携化映射（如 `source/target/targetType/migrateFrom`）。
+- `bucket/*.json` 是**构建产物**，`portableProfile` 会在构建时被展开为标准 `post_install` / `pre_uninstall` 脚本。
+
+常用命令：
+
+```pwsh
+# 全量构建
+bun scripts/build.ts
+
+# 仅构建指定清单
+bun scripts/build.ts --only cursor
+```
+
+> 提交 PR 时必须同时包含 `src` 与 `bucket` 的变更；CI 会执行 `bun scripts/build.ts --only <changed>` 并校验 `bucket` 是否已同步。
+
 ## 测试与自动化
 
 - 本地可通过 `bin/test.ps1` 或 `.\Scoop-Bucket.Tests.ps1` 运行 Pester 测试，确保清单与脚本可用。

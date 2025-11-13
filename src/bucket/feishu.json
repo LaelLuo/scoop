@@ -1,0 +1,81 @@
+{
+    "homepage": "https://www.feishu.cn/",
+    "description": "Connect with teammates anytime and anywhere",
+    "license": {
+        "identifier": "EULA",
+        "url": "https://www.feishu.cn/en/terms"
+    },
+    "version": "7.55.7",
+    "architecture": {
+        "64bit": {
+            "url": "https://sf3-cn.feishucdn.com/obj/ee-appcenter/3c5be120/Feishu-win32_x64-7.55.7-signed.exe#/feishu-7.55.7.7z",
+            "hash": "md5:4d98460984e60ad404b80090210811d4"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app/Feishu.exe",
+            "Feishu"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/LarkShell",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "migrateFrom": [
+                    "$dir/data/larkshell-data"
+                ]
+            },
+            {
+                "label": "local",
+                "source": "LocalAppData/Feishu",
+                "target": "$persist_dir/local",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "migrateFrom": [
+                    "$dir/data/feishu-local"
+                ]
+            }
+        ],
+        "cleanup": {
+            "removeAfterMigrate": [
+                "$dir/data"
+            ]
+        },
+        "options": {
+            "log": true
+        }
+    },
+    "persist": "data",
+    "checkver": {
+        "url": "https://www.feishu.cn/api/downloads",
+        "jsonpath": "$.versions.Windows_x64.download_link",
+        "regex": "(?<url>.*Feishu-win32_x64-(?<version>[\\d.]+)-signed\\.exe)",
+        "replace": "${version}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl#/feishu-$version.7z"
+            }
+        },
+        "hash": {
+            "url": "https://www.feishu.cn/api/downloads",
+            "jsonpath": "$.versions.Windows_x64.hash"
+        }
+    },
+    "notes": [
+        "飞书 (Feishu) - 字节跳动旗下的企业协作平台",
+        "",
+        "便携化配置：",
+        "- 用户数据：%APPDATA%\\LarkShell -> persist/feishu/roaming",
+        "- 本地数据：%LOCALAPPDATA%\\Feishu -> persist/feishu/local",
+        "",
+        "所有用户设置、聊天记录、缓存等数据都保存在便携目录中。"
+    ]
+}

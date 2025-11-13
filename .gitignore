@@ -3,8 +3,15 @@
 ._*
 page.html
 checkver-*.html
-.cunzhi-memory
+
 docs
+
 .idea
+.vscode
+
+.cunzhi-memory
 .kiro
+.codex
+
 CLAUDE.md
+AGENTS.md

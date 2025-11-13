@@ -1,0 +1,65 @@
+{
+    "version": "2.2.14",
+    "description": "Free anti fingerprint browser",
+    "homepage": "https://github.com/Virtual-Browser/VirtualBrowser",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Virtual-Browser/VirtualBrowser/releases/download/2.2.14/VirtualBrowser.Setup.2.2.14.exe#/dl.7z",
+            "hash": "3f5d37ebc09a226d626a2029ccb225a1aaf5d6696f08a4b69ad9ffb3c2e45b8d",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "VirtualBrowser.exe",
+            "VirtualBrowser"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/virtual-browser",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "local",
+                "source": "LocalAppData/VirtualBrowser",
+                "target": "$persist_dir/local",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "updater",
+                "source": "LocalAppData/virtual-browser-updater",
+                "target": "$persist_dir/updater-blocker",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/Virtual-Browser/VirtualBrowser/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "(?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Virtual-Browser/VirtualBrowser/releases/download/$version/VirtualBrowser.Setup.$version.exe#/dl.7z"
+            }
+        }
+    }
+}
