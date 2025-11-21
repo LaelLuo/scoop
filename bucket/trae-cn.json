@@ -1,5 +1,5 @@
 {
-    "version": "1.0.23853",
+    "version": "1.0.23189",
     "description": "Trae 是国内首个 AI IDE，深度理解中文开发场景。AI 高度集成于 IDE 环境之中，为你带来比 AI 插件更加流畅、准确、优质的开发体验。",
     "homepage": "https://www.trae.com.cn/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/1.0.23853/win32/Trae%20CN-Setup-x64.exe",
-            "hash": "b366c239f50e1007b1f317e4ca79ef50851b2a3eabaed55a1fdd8e148e8361bb"
+            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/1.0.23189/win32/Trae%20CN-Setup-x64.exe",
+            "hash": "cdd59f7af72998655b4983e508e27b53d27b03a39021057c00b4237536ebf6a4"
         }
     },
     "innosetup": true,
@@ -37,11 +37,29 @@
         "  Remove-Item $legacyData -Recurse -Force -ErrorAction SilentlyContinue",
         "}",
         "$appDataPath = Join-Path $env:AppData 'Trae CN'",
-        "if (Test-Path $appDataPath -and -not (Get-Item $appDataPath).LinkType) { Copy-Item \"$appDataPath\\*\" $roamingDir -Force -Recurse -ErrorAction SilentlyContinue; Remove-Item $appDataPath -Recurse -Force -ErrorAction SilentlyContinue }",
+        "if (Test-Path $appDataPath) {",
+        "  $item = Get-Item $appDataPath -ErrorAction SilentlyContinue",
+        "  if ($item -and -not $item.LinkType) {",
+        "    Copy-Item \"$appDataPath\\*\" $roamingDir -Force -Recurse -ErrorAction SilentlyContinue",
+        "    Remove-Item $appDataPath -Recurse -Force -ErrorAction SilentlyContinue",
+        "  }",
+        "}",
         "$localProgramsPath = Join-Path $env:LocalAppData 'Programs\\trae-cn'",
-        "if (Test-Path $localProgramsPath -and -not (Get-Item $localProgramsPath).LinkType) { Copy-Item \"$localProgramsPath\\*\" $programsDir -Force -Recurse -ErrorAction SilentlyContinue; Remove-Item $localProgramsPath -Recurse -Force -ErrorAction SilentlyContinue }",
+        "if (Test-Path $localProgramsPath) {",
+        "  $item = Get-Item $localProgramsPath -ErrorAction SilentlyContinue",
+        "  if ($item -and -not $item.LinkType) {",
+        "    Copy-Item \"$localProgramsPath\\*\" $programsDir -Force -Recurse -ErrorAction SilentlyContinue",
+        "    Remove-Item $localProgramsPath -Recurse -Force -ErrorAction SilentlyContinue",
+        "  }",
+        "}",
         "$userProfilePath = Join-Path $env:USERPROFILE '.trae-cn'",
-        "if (Test-Path $userProfilePath -and -not (Get-Item $userProfilePath).LinkType) { Copy-Item \"$userProfilePath\\*\" $homeConfig -Force -Recurse -ErrorAction SilentlyContinue; Remove-Item $userProfilePath -Recurse -Force -ErrorAction SilentlyContinue }",
+        "if (Test-Path $userProfilePath) {",
+        "  $item = Get-Item $userProfilePath -ErrorAction SilentlyContinue",
+        "  if ($item -and -not $item.LinkType) {",
+        "    Copy-Item \"$userProfilePath\\*\" $homeConfig -Force -Recurse -ErrorAction SilentlyContinue",
+        "    Remove-Item $userProfilePath -Recurse -Force -ErrorAction SilentlyContinue",
+        "  }",
+        "}",
         "$extensionsFile = Join-Path $extensionsDir 'extensions.json'",
         "if (Test-Path $extensionsFile) {",
         "  info 'Adjusting path in extensions file...'",
