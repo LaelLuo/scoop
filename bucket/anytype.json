@@ -27,7 +27,7 @@
     "checkver": {
         "url": "https://api.github.com/repos/anyproto/anytype-ts/releases/latest",
         "jsonpath": "$.tag_name",
-        "regex": "v([\\d.]+(?:-[A-Za-z0-9.-]+)?)"
+        "regex": "^v([0-9]+(?:\\.[0-9]+)*)$"
     },
     "autoupdate": {
         "architecture": {
