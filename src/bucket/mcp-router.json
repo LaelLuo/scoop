@@ -1,0 +1,48 @@
+{
+    "version": "0.6.1",
+    "description": "统一管理 Model Context Protocol (MCP) 服务器的桌面应用。",
+    "homepage": "https://github.com/mcp-router/mcp-router",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://github.com/mcp-router/mcp-router/blob/main/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mcp-router/mcp-router/releases/download/v0.6.1/MCP.Router-win32-x64-0.6.1.zip",
+            "hash": "6124540487d2ccf5aeb0464fdb4b7714b49f6918e02b3f2a8cd1e5b3545d5678"
+        }
+    },
+    "shortcuts": [
+        [
+            "MCP Router.exe",
+            "MCP Router"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/MCP Router",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/mcp-router/mcp-router/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "v(?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mcp-router/mcp-router/releases/download/v$version/MCP.Router-win32-x64-$version.zip"
+            }
+        }
+    }
+}
+
