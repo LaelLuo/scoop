@@ -1,5 +1,5 @@
 {
-    "version": "0.14.10",
+    "version": "0.4.9",
     "description": "Desktop application for Claude.ai",
     "homepage": "https://claude.ai/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/AnthropicClaude-0.14.10-full.nupkg",
-            "hash": "0be53c645f8f7fb08ea8fe66bc8833f5af4ad3c78482a25b5f4a3e90f90683fc",
+            "url": "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/AnthropicClaude-0.4.9-full.nupkg",
+            "hash": "783f938bb5e4cd0a829133403f0e4cb8535d4d6d716667b886a291d62046049e",
             "installer": {
                 "script": [
                     "$libDir = Join-Path $dir 'lib\\net45'",
