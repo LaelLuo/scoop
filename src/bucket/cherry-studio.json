@@ -28,27 +28,16 @@
                 "source": "AppData/CherryStudio",
                 "target": "$persist_dir/roaming",
                 "strategy": "symlink",
-                "ensureTarget": true,
-                "migrateFrom": [
-                    "$dir/data/user-data"
-                ]
+                "ensureTarget": true
             },
             {
                 "label": "home-config",
                 "source": "UserProfile/.cherrystudio",
                 "target": "$persist_dir/home/config",
                 "strategy": "symlink",
-                "ensureTarget": true,
-                "migrateFrom": [
-                    "$dir/data/dot-cherrystudio"
-                ]
+                "ensureTarget": true
             }
         ],
-        "cleanup": {
-            "removeAfterMigrate": [
-                "$dir/data"
-            ]
-        },
         "options": {
             "log": true
         }

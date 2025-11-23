@@ -1,79 +1,78 @@
 {
-  "version": "1.2.2.11788527",
-  "description": "腾讯云代码助手 CodeBuddy - AI 时代的智能编程伙伴，集成设计到开发的全栈 IDE",
-  "homepage": "https://www.codebuddy.ai/",
-  "license": {
-    "identifier": "Proprietary",
-    "url": "https://www.codebuddy.ai/genie/document/privacyPolicy"
-  },
-  "notes": [
-    "CodeBuddy 是腾讯云推出的 AI 驱动的全栈开发 IDE，主要功能：",
-    "- AI 代码补全：智能实时代码预测和自动补全",
-    "- AI 设计生成：将手绘概念转换为高保真交互原型",
-    "- 设计转代码：将 Figma 设计转换为生产就绪代码",
-    "- AI 全栈开发：多文件代码生成和重构的完整软件开发代理",
-    "- 内置 BaaS 集成：零配置 Supabase 集成，提供即时数据库和身份验证",
-    "- 一键部署：从开发到实时演示，秒级完成",
-    "",
-    "首次使用需要登录腾讯云账号并获取邀请码。",
-    "邀请码申请：https://wj.qq.com/s2/22240515/0ac5"
-  ],
-  "architecture": {
-    "64bit": {
-      "url": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/aiide/win32-x64-user/CodeBuddy-win32-x64-user-1.2.2.11788527-526ab22a8-f4a36c50.exe",
-      "hash": "4890a22781e01f171c5a456f1318e332c0ab70532302e150fc0aba0b7588b491"
-    }
-  },
-  "innosetup": true,
-  "extract_dir": "{code_GetDestDir}",
-  "shortcuts": [["CodeBuddy.exe", "CodeBuddy"]],
-  "portableProfile": {
-    "mappings": [
-      {
-        "label": "roaming",
-        "source": "AppData/CodeBuddy",
-        "target": "$persist_dir/roaming",
-        "strategy": "symlink",
-        "ensureTarget": true,
-        "migrateFrom": ["$dir/data/user-data"]
-      },
-      {
-        "label": "extensions",
-        "source": "LocalAppData/CodeBuddyExtension",
-        "target": "$persist_dir/local/extensions",
-        "strategy": "symlink",
-        "ensureTarget": true,
-        "migrateFrom": ["$dir/data/extension-data"]
-      },
-      {
-        "label": "home-config",
-        "source": "UserProfile/.codebuddy",
-        "target": "$persist_dir/home/config",
-        "strategy": "symlink",
-        "ensureTarget": true,
-        "migrateFrom": ["$dir/data/codebuddy-config"]
-      }
-    ],
-    "cleanup": {
-      "removeAfterMigrate": ["$dir/data"]
+    "version": "1.2.9.12775165",
+    "description": "腾讯云代码助手 CodeBuddy - AI 时代的智能编程伙伴，集成设计到开发的全栈 IDE",
+    "homepage": "https://www.codebuddy.ai/",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://www.codebuddy.ai/genie/document/privacyPolicy"
     },
-    "options": {
-      "module": "scripts/portable.psm1",
-      "log": true
-    }
-  },
-  "persist": "data",
-  "checkver": {
-    "url": "https://www.codebuddy.ai/v2/update?platform=ide-win32-x64-user",
-    "jsonpath": "$.url",
-    "regex": "(?<url>.*CodeBuddy-win32-x64-user-(?<version>[\\d.]+)-.*\\.exe)",
-    "replace": "${version}"
-  },
-  "autoupdate": {
+    "notes": [
+        "CodeBuddy 是腾讯云推出的 AI 驱动的全栈开发 IDE，主要功能：",
+        "- AI 代码补全：智能实时代码预测和自动补全",
+        "- AI 设计生成：将手绘概念转换为高保真交互原型",
+        "- 设计转代码：将 Figma 设计转换为生产就绪代码",
+        "- AI 全栈开发：多文件代码生成和重构的完整软件开发代理",
+        "- 内置 BaaS 集成：零配置 Supabase 集成，提供即时数据库和身份验证",
+        "- 一键部署：从开发到实时演示，秒级完成",
+        "",
+        "首次使用需要登录腾讯云账号并获取邀请码。",
+        "邀请码申请：https://wj.qq.com/s2/22240515/0ac5"
+    ],
     "architecture": {
-      "64bit": {
-        "url": "$matchUrl"
-      }
+        "64bit": {
+            "url": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/aiide/win32-x64-user/CodeBuddy-win32-x64-user-1.2.9.12775165-73cd1db49-e3faef6a.exe",
+            "hash": "3af638c92e049b09ed108f0b645fcaae6e14760be1e85dbeaa46637f18d1cea4"
+        }
+    },
+    "innosetup": true,
+    "extract_dir": "{code_GetDestDir}",
+    "shortcuts": [
+        [
+            "CodeBuddy.exe",
+            "CodeBuddy"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/CodeBuddy",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "extensions",
+                "source": "LocalAppData/CodeBuddyExtension",
+                "target": "$persist_dir/local/extensions",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "home-config",
+                "source": "UserProfile/.codebuddy",
+                "target": "$persist_dir/home/config",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "module": "scripts/portable.psm1",
+            "log": true
+        }
+    },
+    "persist": "data",
+    "checkver": {
+        "url": "https://www.codebuddy.ai/v2/update?platform=ide-win32-x64-user",
+        "jsonpath": "$.url",
+        "regex": "(?<url>.*CodeBuddy-win32-x64-user-(?<version>[\\d.]+)-.*\\.exe)",
+        "replace": "${version}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl"
+            }
+        }
     }
-  }
 }

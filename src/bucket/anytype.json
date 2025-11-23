@@ -1,5 +1,5 @@
 {
-    "version": "0.50.67",
+    "version": "0.50.72-beta",
     "description": "Local-first, E2E encrypted software for creating and storing tasks, notes, ideas, documents, workflows, and more.",
     "homepage": "https://anytype.io/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/anyproto/anytype-ts/releases/download/v0.50.67-alpha/Anytype.Setup.0.50.67-alpha.exe#/dl.7z",
-            "hash": "410bf8853ed05aa4de70fc84a007f432d05ddca3d927444efb86667e92c1db8a",
+            "url": "https://github.com/anyproto/anytype-ts/releases/download/v0.50.72-beta/Anytype.Setup.0.50.72-beta.exe#/dl.7z",
+            "hash": "a1a02418b64cba76ac21401f436005481e569cf942d908602d85a04d7c868a82",
             "pre_install": [
                 "Remove-Item \"$dir\\resources\" -Recurse",
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
@@ -31,10 +31,7 @@
                 "source": "AppData/anytype",
                 "target": "$persist_dir/roaming",
                 "strategy": "symlink",
-                "ensureTarget": true,
-                "migrateFrom": [
-                    "$dir/data"
-                ]
+                "ensureTarget": true
             },
             {
                 "label": "updater",
@@ -45,11 +42,6 @@
                 "targetType": "file"
             }
         ],
-        "cleanup": {
-            "removeAfterMigrate": [
-                "$dir/data"
-            ]
-        },
         "options": {
             "log": true
         }
@@ -62,7 +54,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-            "url": "https://github.com/anyproto/anytype-ts/releases/download/v$version/Anytype.Setup.$version.exe#/dl.7z"
+                "url": "https://github.com/anyproto/anytype-ts/releases/download/v$version/Anytype.Setup.$version.exe#/dl.7z"
             }
         }
     }

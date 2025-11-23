@@ -1,5 +1,5 @@
 {
-    "version": "1.0.23191",
+    "version": "1.0.23854",
     "description": "Trae IDE integrates seamlessly into your workflow, collaborating with you to maximize performance and efficiency.",
     "homepage": "https://www.trae.ai/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/1.0.23191/win32/Trae-Setup-x64.exe",
-            "hash": "0d47487b08b3de949799b72d8a8e392ab9326e08af0f8d2ce092912a60c5d3e9"
+            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/1.0.23854/win32/Trae-Setup-x64.exe",
+            "hash": "cc64342fdcd839186bcbcb5abdb052892b8cae1749741101083421d75a698594"
         }
     },
     "innosetup": true,
@@ -54,16 +54,6 @@
         "$roamingDir = Join-Path $persist_dir 'roaming'",
         "$programsDir = Join-Path $persist_dir 'programs'",
         "foreach ($path in @($homeConfig, $extensionsDir, $roamingDir, $programsDir)) { if (-not (Test-Path $path)) { New-Item -ItemType Directory -Path $path -Force | Out-Null } }",
-        "$legacyData = Join-Path $dir 'data'",
-        "if (Test-Path $legacyData) {",
-        "  $legacyRoaming = Join-Path $legacyData 'user-data'",
-        "  if (Test-Path $legacyRoaming) { Copy-Item \"$legacyRoaming\\*\" $roamingDir -Force -Recurse -ErrorAction SilentlyContinue }",
-        "  $legacyPrograms = Join-Path $legacyData 'local-programs'",
-        "  if (Test-Path $legacyPrograms) { Copy-Item \"$legacyPrograms\\*\" $programsDir -Force -Recurse -ErrorAction SilentlyContinue }",
-        "  $legacyExtensions = Join-Path $legacyData 'extensions'",
-        "  if (Test-Path $legacyExtensions) { Copy-Item \"$legacyExtensions\\*\" $extensionsDir -Force -Recurse -ErrorAction SilentlyContinue }",
-        "  Remove-Item $legacyData -Recurse -Force -ErrorAction SilentlyContinue",
-        "}",
         "$appDataPath = Join-Path $env:AppData 'Trae'",
         "if (Test-Path $appDataPath) {",
         "  $item = Get-Item $appDataPath -ErrorAction SilentlyContinue",

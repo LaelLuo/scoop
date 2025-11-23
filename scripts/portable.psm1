@@ -104,31 +104,11 @@ function Remove-PortableLink {
     }
 }
 
-function Invoke-PortableCleanup {
-    param(
-        [hashtable]$Cleanup,
-        [hashtable]$Context
-    )
-
-    if (-not $Cleanup) {
-        return
-    }
-
-    foreach ($path in @($Cleanup.removeAfterMigrate)) {
-        if (-not $path) { continue }
-        $resolved = Resolve-PortablePath -Path $path -Context $Context
-        if (Test-Path $resolved) {
-            Remove-Item $resolved -Recurse -Force -ErrorAction SilentlyContinue
-        }
-    }
-}
-
 function Invoke-PortableMappings {
     param(
         [ValidateSet('Install', 'Uninstall')] [string]$Action,
         [hashtable]$Context,
         [array]$Mappings,
-        [hashtable]$Cleanup,
         [switch]$Log
     )
 
@@ -148,12 +128,6 @@ function Invoke-PortableMappings {
             }
 
             if ($targetType -ne 'file') {
-                foreach ($legacy in @($mapping.MigrateFrom)) {
-                    if (-not $legacy) { continue }
-                    $legacyPath = Resolve-PortablePath -Path $legacy -Context $Context
-                    Copy-PortableData -Source $legacyPath -Destination $targetPath
-                }
-
                 if ((Test-Path $sourcePath) -and -not (Get-Item $sourcePath -ErrorAction SilentlyContinue).LinkType) {
                     Copy-PortableData -Source $sourcePath -Destination $targetPath
                     Remove-Item $sourcePath -Recurse -Force -ErrorAction SilentlyContinue
@@ -175,9 +149,5 @@ function Invoke-PortableMappings {
         else {
             Remove-PortableLink -Link $sourcePath -Log:$Log
         }
-    }
-
-    if ($Action -eq 'Install') {
-        Invoke-PortableCleanup -Cleanup $Cleanup -Context $Context
     }
 }

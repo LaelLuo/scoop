@@ -1,5 +1,5 @@
 {
-    "version": "0.2.14",
+    "version": "0.2.17",
     "description": "Qoder - The Agentic Coding Platform，AI 驱动的智能编程平台，专为真实软件开发而设计",
     "homepage": "https://qoder.com/",
     "license": {
@@ -22,8 +22,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://qoder-ide.oss-accelerate.aliyuncs.com/release/0.2.14/QoderUserSetup-x64.exe",
-            "hash": "bd8e70b9cb960bb4d37d1f724c07a6ee5da09f4d09f11cd7b26a89ecb33203de"
+            "url": "https://qoder-ide.oss-accelerate.aliyuncs.com/release/0.2.17/QoderUserSetup-x64.exe",
+            "hash": "924fce91b4cccc8bacefb2989eae20834699264c9e5f30ae4ee81c9e9a6cd339"
         }
     },
     "innosetup": true,
@@ -41,27 +41,16 @@
                 "source": "AppData/Qoder",
                 "target": "$persist_dir/roaming",
                 "strategy": "symlink",
-                "ensureTarget": true,
-                "migrateFrom": [
-                    "$dir/data/user-data"
-                ]
+                "ensureTarget": true
             },
             {
                 "label": "home-config",
                 "source": "UserProfile/.qoder",
                 "target": "$persist_dir/home/config",
                 "strategy": "symlink",
-                "ensureTarget": true,
-                "migrateFrom": [
-                    "$dir/data/qoder-config"
-                ]
+                "ensureTarget": true
             }
         ],
-        "cleanup": {
-            "removeAfterMigrate": [
-                "$dir/data"
-            ]
-        },
         "options": {
             "log": true
         }
