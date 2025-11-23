@@ -1,0 +1,66 @@
+{
+    "version": "0.14.10",
+    "description": "Desktop application for Claude.ai",
+    "homepage": "https://claude.ai/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/AnthropicClaude-0.14.10-full.nupkg",
+            "hash": "0be53c645f8f7fb08ea8fe66bc8833f5af4ad3c78482a25b5f4a3e90f90683fc",
+            "installer": {
+                "script": [
+                    "$libDir = Join-Path $dir 'lib\\net45'",
+                    "if (Test-Path $libDir) {",
+                    "  Get-ChildItem $libDir | Move-Item -Destination $dir -Force",
+                    "  Remove-Item (Join-Path $dir 'lib') -Recurse -Force -ErrorAction SilentlyContinue",
+                    "  Remove-Item (Join-Path $dir '_rels') -Recurse -Force -ErrorAction SilentlyContinue",
+                    "  Remove-Item (Join-Path $dir 'package') -Recurse -Force -ErrorAction SilentlyContinue",
+                    "  Remove-Item (Join-Path $dir '[Content_Types].xml') -Force -ErrorAction SilentlyContinue",
+                    "  Remove-Item (Join-Path $dir 'AnthropicClaude.nuspec') -Force -ErrorAction SilentlyContinue",
+                    "}"
+                ]
+            }
+        }
+    },
+    "shortcuts": [
+        [
+            "claude.exe",
+            "Claude"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/Claude",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "updater",
+                "source": "LocalAppData/AnthropicClaude",
+                "target": "$persist_dir/updater-blocker",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "checkver": {
+        "url": "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/RELEASES",
+        "regex": "AnthropicClaude-([\\d.]+)-full\\.nupkg"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/AnthropicClaude-$version-full.nupkg"
+            }
+        }
+    }
+}
