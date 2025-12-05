@@ -25,9 +25,15 @@
         ]
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/anyproto/anytype-ts/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "^v([0-9]+(?:\\.[0-9]+)*)$"
+        "script": [
+            "$releases = Invoke-WebRequest -Uri 'https://api.github.com/repos/anyproto/anytype-ts/releases' -UseBasicParsing | ConvertFrom-Json",
+            "$stable = $releases | Where-Object { $_.tag_name -notmatch '-' } | Sort-Object -Property @{ Expression = { [version]($_.tag_name.TrimStart('v')) } } -Descending | Select-Object -First 1",
+            "if (-not $stable) {",
+            "  throw 'Failed to locate stable Anytype release.'",
+            "}",
+            "Write-Output $stable.tag_name"
+        ],
+        "regex": "^v(?<version>.+)$"
     },
     "autoupdate": {
         "architecture": {
