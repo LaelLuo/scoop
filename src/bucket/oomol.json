@@ -1,5 +1,5 @@
 {
-    "version": "1.4.10",
+    "version": "1.4.13",
     "description": "AI 可编程工作流平台 - 基于 VSCode 的工作流 IDE",
     "homepage": "https://oomol.com/zh-CN/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://static.oomol.com/release/stable/win32/x64/OOMOL Studio-1.4.10-2025-11-17.22.exe",
-            "hash": "c71976e3cd1bf6bd821b5219162b59347b8c0ab357c0ddbcb74e75da83e4a6ca"
+            "url": "https://static.oomol.com/release/stable/win32/x64/OOMOL Studio-1.4.13-2025-12-04.16.exe",
+            "hash": "4fa03c9eb726aee727d62542b6959534fbbd73d630bf392ae54c65d6f1952c29"
         }
     },
     "innosetup": true,

@@ -170,7 +170,8 @@
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
         "    @{ Label = 'home-config'; Source = 'UserProfile/.cursor'; Target = \"$persist_dir/home/config\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
         "    @{ Label = 'roaming'; Source = 'AppData/Cursor'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'programs'; Source = 'LocalAppData/Programs/cursor'; Target = \"$persist_dir/programs\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'programs'; Source = 'LocalAppData/Programs/cursor'; Target = \"$persist_dir/programs\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'updater'; Source = 'LocalAppData/cursor-updater'; Target = \"$persist_dir/local/cursor-updater\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ],
     "persist": "data",
@@ -327,7 +328,8 @@
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
         "    @{ Label = 'home-config'; Source = 'UserProfile/.cursor'; Target = \"$persist_dir/home/config\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
         "    @{ Label = 'roaming'; Source = 'AppData/Cursor'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'programs'; Source = 'LocalAppData/Programs/cursor'; Target = \"$persist_dir/programs\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'programs'; Source = 'LocalAppData/Programs/cursor'; Target = \"$persist_dir/programs\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'updater'; Source = 'LocalAppData/cursor-updater'; Target = \"$persist_dir/local/cursor-updater\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ]
 }

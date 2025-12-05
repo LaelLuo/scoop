@@ -254,6 +254,14 @@ function mergeCanonicalFields(src: Manifest, bucket: Manifest | undefined): Mani
         (merged as any).extract_dir = (bucket as any).extract_dir;
     }
 
+    if ((bucket as any).url !== undefined) {
+        (merged as any).url = (bucket as any).url;
+    }
+
+    if ((bucket as any).hash !== undefined) {
+        (merged as any).hash = (bucket as any).hash;
+    }
+
     return merged;
 }
 
@@ -279,7 +287,25 @@ function hasCanonicalDiff(src: Manifest, merged: Manifest): boolean {
     const srcExtractJson = srcExtract === undefined ? "" : JSON.stringify(srcExtract);
     const mergedExtractJson = mergedExtract === undefined ? "" : JSON.stringify(mergedExtract);
 
-    return srcExtractJson !== mergedExtractJson;
+    if (srcExtractJson !== mergedExtractJson) {
+        return true;
+    }
+
+    const srcUrl = (src as any).url;
+    const mergedUrl = (merged as any).url;
+    const srcUrlJson = srcUrl === undefined ? "" : JSON.stringify(srcUrl);
+    const mergedUrlJson = mergedUrl === undefined ? "" : JSON.stringify(mergedUrl);
+
+    if (srcUrlJson !== mergedUrlJson) {
+        return true;
+    }
+
+    const srcHash = (src as any).hash;
+    const mergedHash = (merged as any).hash;
+    const srcHashJson = srcHash === undefined ? "" : JSON.stringify(srcHash);
+    const mergedHashJson = mergedHash === undefined ? "" : JSON.stringify(mergedHash);
+
+    return srcHashJson !== mergedHashJson;
 }
 
 function buildInvokeBlock(action: "Install" | "Uninstall", profile: PortableProfile): string[] {
