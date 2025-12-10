@@ -1,79 +1,56 @@
 {
-    "version": "1.7.2",
-    "description": "A desktop client that supports for multiple LLM providers.",
-    "homepage": "https://cherry-ai.com",
-    "license": "Apache-2.0",
+    "version": "1.0.1",
+    "description": "智谱 AI 输入法，支持全局语音输入和中英混输。",
+    "homepage": "https://autoglm.zhipuai.cn/autotyper/",
+    "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.7.2/Cherry-Studio-1.7.2-x64-setup.exe#/dl.7z",
-            "hash": "sha512:4d8095c6600a4427894bb31cdb6053008728bb87dde9b4eb068f082573d6215262b0459da8532a6772a963f0673f05d64443afc4488d4e71dd49a7726fdf4a73",
-            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
-        },
-        "arm64": {
-            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.7.2/Cherry-Studio-1.7.2-arm64-setup.exe#/dl.7z",
-            "hash": "b2939bc076be6fbc49bd26bdbe9bfb84596cbb48e3d79552b7082d4de334e0a3",
-            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\""
+            "url": "https://autoglm.aminer.cn/autotyper/updates/AutoGLM_win32_x64_1.0.1.exe#/installer.exe",
+            "hash": "02648da7a00df235768d450696a0df549f9438e6b22925bbdcda75f3ff074745"
         }
+    },
+    "installer": {
+        "script": [
+            "$tmpDir = Join-Path $dir '_tmp'",
+            "Expand-7zipArchive \"$dir\\installer.exe\" $tmpDir -Removal",
+            "$pluginDir = Join-Path $tmpDir '$PLUGINSDIR'",
+            "$appArchive = Join-Path $pluginDir 'app-64.7z'",
+            "if (-not (Test-Path $appArchive)) { throw 'AutoGLM app archive not found in installer.' }",
+            "Expand-7zipArchive $appArchive \"$dir\\app\" -Removal",
+            "Remove-Item $tmpDir -Recurse -Force"
+        ]
     },
     "shortcuts": [
         [
-            "Cherry Studio.exe",
-            "Cherry Studio"
+            "app\\AutoGLM.exe",
+            "智谱AI输入法"
         ]
     ],
+    "checkver": {
+        "script": [
+            "$download = Invoke-WebRequest -Uri 'https://autoglm.zhipuai.cn/autotyper/' -UseBasicParsing",
+            "if ($download.Content -notmatch 'src=\"([^\"]*index-[^\"]+\\.js)\"') {",
+            "  throw 'Failed to locate main bundle script on AutoGLM autotyper page.'",
+            "}",
+            "$bundlePath = $matches[1]",
+            "$bundleUrl = if ($bundlePath -like 'http*') { $bundlePath } else { 'https://autoglm.zhipuai.cn' + $bundlePath }",
+            "$bundle = Invoke-WebRequest -Uri $bundleUrl -UseBasicParsing",
+            "if ($bundle.Content -match 'https://autoglm\\.aminer\\.cn/autotyper/updates/AutoGLM_win32_x64_(?<version>[0-9.]+)\\.exe') {",
+            "  $matches[0]",
+            "} else {",
+            "  throw 'Failed to parse AutoGLM download URL from bundle script.'",
+            "}"
+        ],
+        "regex": "(?<url>https://autoglm\\.aminer\\.cn/autotyper/updates/AutoGLM_win32_x64_(?<version>[0-9.]+)\\.exe)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl#/installer.exe"
+            }
+        }
+    },
     "post_install": [
-        "# Clean installer leftovers (from 7zip extraction)",
-        "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue",
-        "$homeConfig = Join-Path $persist_dir 'home\\config'",
-        "$roamingDir = Join-Path $persist_dir 'roaming'",
-        "$csBin = Join-Path $homeConfig 'bin'",
-        "foreach ($path in @($homeConfig, $roamingDir, $csBin)) { if (-not (Test-Path $path)) { New-Item -ItemType Directory -Path $path -Force | Out-Null } }",
-        "# Link system bun/uv into Cherry Studio local bin if available",
-        "# bun (do not overwrite existing)",
-        "$bunCmd = Get-Command bun -ErrorAction SilentlyContinue",
-        "if ($bunCmd) {",
-        "  $bunTarget = $bunCmd.Source",
-        "  $bunExe = Join-Path $csBin 'bun.exe'",
-        "  $bunShim = Join-Path $csBin 'bun.cmd'",
-        "  if ((Test-Path $bunExe) -or (Test-Path $bunShim)) {",
-        "    info '[Cherry Studio] bun already present in ~/.cherrystudio/bin; skipping'",
-        "  } else {",
-        "    try {",
-        "      New-Item -ItemType SymbolicLink -Path $bunExe -Target $bunTarget -Force | Out-Null",
-        "      info \"[Cherry Studio] Linked bun -> $bunTarget\"",
-        "    } catch {",
-        "      warn \"[Cherry Studio] Symlink bun failed, creating shim: $_\"",
-        "      $shimContent = '@echo off' + \"`n\" + '\"' + $bunTarget + '\" %*'",
-        "      Set-Content -Path $bunShim -Value $shimContent -Encoding Ascii",
-        "    }",
-        "  }",
-        "} else {",
-        "  info '[Cherry Studio] bun not found in PATH; skipping link'",
-        "}",
-        "# uv + uvx + uvw (do not overwrite existing)",
-        "$uvNames = @('uv', 'uvx', 'uvw')",
-        "foreach ($name in $uvNames) {",
-        "  $cmdInfo = Get-Command $name -ErrorAction SilentlyContinue",
-        "  if ($cmdInfo) {",
-        "    $target = $cmdInfo.Source",
-        "    $exePath = Join-Path $csBin (\"$name.exe\")",
-        "    $cmdPath = Join-Path $csBin (\"$name.cmd\")",
-        "    if ((Test-Path $exePath) -or (Test-Path $cmdPath)) {",
-        "      info \"[Cherry Studio] $name already present in ~/.cherrystudio/bin; skipping\"",
-        "      continue",
-        "    }",
-        "    try {",
-        "      New-Item -ItemType SymbolicLink -Path $exePath -Target $target -Force | Out-Null",
-        "      info \"[Cherry Studio] Linked $name -> $target\"",
-        "    } catch {",
-        "      warn \"[Cherry Studio] Symlink $name failed, creating shim: $_\"",
-        "      $shimContent = '@echo off' + \"`n\" + '\"' + $target + '\" %*'",
-        "      Set-Content -Path $cmdPath -Value $shimContent -Encoding Ascii",
-        "    }",
-        "  } else {",
-        "    info \"[Cherry Studio] $name not found in PATH; skipping link\"",
-        "  }",
-        "}",
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",
         "# 说明：构建阶段会把该文件的内容内联进 post_install/pre_uninstall。",
@@ -211,30 +188,10 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/CherryStudio'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'home-config'; Source = 'UserProfile/.cherrystudio'; Target = \"$persist_dir/home/config\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/AutoGLM'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'updater'; Source = 'LocalAppData/autoglm-updater'; Target = \"$persist_dir/local/autoglm-updater\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ],
-    "notes": [
-        "Cherry Studio 将 bun/uv 等命令映射到 ~/.cherrystudio/bin 目录中，首次运行时会自动创建软链接，可在应用内直接使用。"
-    ],
-    "checkver": {
-        "github": "https://github.com/CherryHQ/cherry-studio"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-x64-setup.exe#/dl.7z",
-                "hash": {
-                    "url": "$baseurl/latest.yml",
-                    "regex": "sha512: $base64"
-                }
-            },
-            "arm64": {
-                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-arm64-setup.exe#/dl.7z"
-            }
-        }
-    },
     "pre_uninstall": [
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",
@@ -373,8 +330,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/CherryStudio'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'home-config'; Source = 'UserProfile/.cherrystudio'; Target = \"$persist_dir/home/config\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/AutoGLM'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'updater'; Source = 'LocalAppData/autoglm-updater'; Target = \"$persist_dir/local/autoglm-updater\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ]
 }
