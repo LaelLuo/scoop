@@ -11,9 +11,8 @@
     },
     "bin": "pocketbase.exe",
     "checkver": {
-        "url": "https://api.github.com/repos/pocketbase/pocketbase/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "^v(.+)$"
+        "github": "https://github.com/pocketbase/pocketbase",
+        "regex": "^v(?<version>.+)$"
     },
     "autoupdate": {
         "architecture": {

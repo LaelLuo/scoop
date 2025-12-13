@@ -33,8 +33,7 @@
         }
     },
     "checkver": {
-        "url": "https://api.github.com/repos/mcp-router/mcp-router/releases/latest",
-        "jsonpath": "$.tag_name",
+        "github": "https://github.com/mcp-router/mcp-router",
         "regex": "v(?<version>[\\d.]+)"
     },
     "autoupdate": {
