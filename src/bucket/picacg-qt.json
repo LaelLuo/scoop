@@ -6,7 +6,7 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/tonquer/picacg-qt/releases/download/v1.5.3/bika_v1.5.3.1_windows_x64.zip",
-            "hash": "sha256:e22e89ef21f426344a0849ffd11084ac2a5788500a4a87fb4e9d4457062211df"
+            "hash": "e22e89ef21f426344a0849ffd11084ac2a5788500a4a87fb4e9d4457062211df"
         }
     },
     "extract_dir": "bika",
@@ -17,7 +17,10 @@
             "哔咔漫画"
         ]
     ],
-    "persist": "db",
+    "persist": [
+        "db",
+        "data"
+    ],
     "notes": [
         "首次使用请参考项目 README：如果 Waifu2x 初始化失败或提示 DLL 错误，请安装 VC++ 运行库和 Vulkan 运行库。"
     ],
