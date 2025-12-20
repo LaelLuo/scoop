@@ -54,7 +54,8 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 - `bun scripts/build.ts`：全量构建；`--only <pkg>` 支持增量。
 - `bin/checkver.ps1` / `bin/checkhashes.ps1` / `bin/checkurls.ps1`：版本、哈希与链接校验。
 - `bin/formatjson.ps1`：保证 JSON 排版一致。
-- `Scoop-Bucket.Tests.ps1`：运行 Pester 测试，确保便携化脚本涵盖主流程。
+- 测试由 CI 自动执行，本地没有 Pester 测试环境。
+- 开发调试时使用缓存策略减少重复下载：临时降低清单版本号 → `bin/checkver.ps1 <manifest> -u` 利用 `$env:SCOOP/cache`。
 
 ## 工作流要求
 1. 编辑清单 → 运行 `bun scripts/build.ts --only <manifest>` → 提交 `src/` 与 `bucket/` 的双写结果。

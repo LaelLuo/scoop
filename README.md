@@ -72,8 +72,7 @@ bun scripts/build.ts --only cursor
 
 ## 测试与自动化
 
-- 本地可通过 `bin/test.ps1` 或 `.\Scoop-Bucket.Tests.ps1` 运行 Pester 测试，确保清单与脚本可用。
-- `ci.yml` 会在 PR / main 分支上执行格式校验与测试，阻止异常清单进入主干。
+- `ci.yml` 会在 PR / main 分支上执行 Pester 测试与格式校验，阻止异常清单进入主干。
 - `excavator.yml` 与 `bin/auto-pr.ps1` 负责批量检查上游版本并自动创建更新 PR。
 
 ## 贡献指南

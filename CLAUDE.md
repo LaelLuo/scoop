@@ -41,13 +41,7 @@ bin/formatjson.ps1 <清单名>
 ```
 
 ### 测试
-```powershell
-# 运行Pester测试
-bin/test.ps1
-
-# 运行bucket特定测试
-.\Scoop-Bucket.Tests.ps1
-```
+本地没有 Pester 测试环境，测试由 CI 自动执行。
 
 ## 清单开发模式
 
