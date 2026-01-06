@@ -34,7 +34,7 @@
     },
     "checkver": {
         "github": "https://github.com/mcp-router/mcp-router",
-        "regex": "v(?<version>[\\d.]+)"
+        "regex": "v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)"
     },
     "autoupdate": {
         "architecture": {
