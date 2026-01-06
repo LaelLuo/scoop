@@ -1,12 +1,12 @@
 {
-    "version": "0.1.20251117",
+    "version": "0.1.20251222",
     "description": "MoonBit 语言的官方 CLI 工具链（moon 编译器、构建系统、包管理器及 MoonPilot 等）。",
     "homepage": "https://www.moonbitlang.com/",
     "license": "AGPL-3.0-only",
     "architecture": {
         "64bit": {
             "url": "https://cli.moonbitlang.com/binaries/latest/moonbit-windows-x86_64.zip",
-            "hash": "889c7bc5d80a1f53eba9533046725a7596479da2308900f03d76882d901479c1"
+            "hash": "be05b42fb9366979679bc2aa4a0929608a20a4ef0d47877806bb2b44b66f10b2"
         }
     },
     "env_set": {
@@ -62,5 +62,12 @@
             "Remove-Item -Recurse -Force $tmpDir -ErrorAction SilentlyContinue"
         ],
         "regex": "([\\d\\.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cli.moonbitlang.com/binaries/latest/moonbit-windows-x86_64.zip"
+            }
+        }
     }
 }
