@@ -1,5 +1,5 @@
 {
-    "version": "2.2.44",
+    "version": "2.3.29",
     "description": "Built to make you extraordinarily productive, Cursor is the best way to code with AI.",
     "homepage": "https://www.cursor.com/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://downloads.cursor.com/production/20adc1003928b0f1b99305dbaf845656ff81f5d4/win32/x64/user-setup/CursorUserSetup-x64-2.2.44.exe",
-            "hash": "f3b1a6cf9622aa6494f415a81cd24a51e6c317016605069d036fd1f32b8f5011"
+            "url": "https://downloads.cursor.com/production/4ca9b38c6c97d4243bf0c61e51426667cb964bdc/win32/x64/user-setup/CursorUserSetup-x64-2.3.29.exe",
+            "hash": "cc70f329447f970473afceef4a2dfe5031ed7721de743c682b7f1769e0954155"
         }
     },
     "innosetup": true,
