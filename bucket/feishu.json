@@ -5,11 +5,11 @@
         "identifier": "EULA",
         "url": "https://www.feishu.cn/en/terms"
     },
-    "version": "7.61.6",
+    "version": "7.62.6",
     "architecture": {
         "64bit": {
-            "url": "https://sf3-cn.feishucdn.com/obj/ee-appcenter/15d07312/Feishu-win32_x64-7.61.6-signed.exe#/feishu-7.61.6.7z",
-            "hash": "md5:ee7a2538b06dce645b04731273dfe31f"
+            "url": "https://sf3-cn.feishucdn.com/obj/ee-appcenter/81525574/Feishu-win32_x64-7.62.6-signed.exe#/feishu-7.62.6.7z",
+            "hash": "md5:a0bc40ab6579dc50fc623da455ba2180"
         }
     },
     "extract_to": "app",
