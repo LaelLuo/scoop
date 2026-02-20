@@ -1,5 +1,5 @@
 {
-    "version": "0.4.2-2",
+    "version": "0.4.3-2",
     "description": "LM Studio is an easy-to-use desktop app for experimenting with local and open-source Large Language Models (LLMs).",
     "homepage": "https://lmstudio.ai/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://installers.lmstudio.ai/win32/x64/0.4.2-2/LM-Studio-0.4.2-2-x64.exe",
-            "hash": "5549d04644d0fafe94cdbe9189f087fdfbec94c02999fb9e2aa5e600ac828430"
+            "url": "https://installers.lmstudio.ai/win32/x64/0.4.3-2/LM-Studio-0.4.3-2-x64.exe",
+            "hash": "6a0a3ec527ea06ea38287234299179e055f8c5f7795e4e54cd976eb4ec52c9bb"
         }
     },
     "installer": {
