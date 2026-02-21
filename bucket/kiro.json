@@ -1,5 +1,5 @@
 {
-    "version": "0.10.10",
+    "version": "0.10.16",
     "description": "Kiro is Amazon's agentic IDE built for working with AWS, powered by Claude AI",
     "homepage": "https://kiro.dev/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://prod.download.desktop.kiro.dev/releases/stable/win32-x64/signed/0.10.10/kiro-ide-0.10.10-stable-win32-x64.exe",
-            "hash": "44cb3c7860bf50ae3eaaf61a8e01c8e988d77195aac5e442e030ff59d0cecf9a"
+            "url": "https://prod.download.desktop.kiro.dev/releases/stable/win32-x64/signed/0.10.16/kiro-ide-0.10.16-stable-win32-x64.exe",
+            "hash": "1867620800de41ff239c50e02d6de776280fbdcc57003f38d28a129e54f37e34"
         }
     },
     "innosetup": true,
