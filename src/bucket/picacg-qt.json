@@ -1,12 +1,12 @@
 {
-    "version": "1.5.3.1",
+    "version": "1.5.4",
     "description": "哔咔漫画 PC 客户端，使用 Qt 实现的多平台漫画阅读与下载工具。",
     "homepage": "https://github.com/tonquer/picacg-qt",
     "license": "LGPL-3.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/tonquer/picacg-qt/releases/download/v1.5.3/bika_v1.5.3.1_windows_x64.zip",
-            "hash": "e22e89ef21f426344a0849ffd11084ac2a5788500a4a87fb4e9d4457062211df"
+            "url": "https://github.com/tonquer/picacg-qt/releases/download/v1.5.4/bika_v1.5.4_windows_x64.7z",
+            "hash": "f010203a865df5ad07ef822d4533776547efcc94e4651a230574025f0e9171e5"
         }
     },
     "extract_dir": "bika",
@@ -31,13 +31,13 @@
             "$response = Invoke-WebRequest -Uri $url -UseBasicParsing -Headers $headers",
             "$response.Content"
         ],
-        "regex": "\"browser_download_url\"\\s*:\\s*\"https://github.com/tonquer/picacg-qt/releases/download/v([\\d.]+)/bika_v([\\d.]+)_windows_x64\\.zip\"",
+        "regex": "\"browser_download_url\"\\s*:\\s*\"https://github.com/tonquer/picacg-qt/releases/download/v([\\d.]+)/bika_v([\\d.]+)_windows_x64(?:\\.7z|\\.zip)\"",
         "replace": "$2"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/tonquer/picacg-qt/releases/download/v$match1/bika_v$match2_windows_x64.zip"
+                "url": "https://github.com/tonquer/picacg-qt/releases/download/v$match1/bika_v$match2_windows_x64.7z"
             }
         }
     }
