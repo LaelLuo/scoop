@@ -1,0 +1,59 @@
+{
+    "version": "0.2.15",
+    "description": "支持 OpenClaw 一键安装、飞书集成与本地执行的桌面 AI 助手。",
+    "homepage": "https://autoglm.zhipuai.cn/autoclaw/",
+    "license": "Proprietary",
+    "architecture": {
+        "64bit": {
+            "url": "https://autoglm.aminer.cn/autoclaw/updates/autoclaw-0.2.15-setup.exe#/dl.7z",
+            "hash": "sha512:552f555ba0d654f5daf8c4a06ea5ce2585012989fcacf6b59c2928da6d5f4468997ee636b54a1be3240bf0eb280f6f4b17b61d2b36deb8fc3fc03c8ce7066270",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "AutoClaw.exe",
+            "AutoClaw"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/AutoClaw",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "updater",
+                "source": "LocalAppData/autoclaw-updater",
+                "target": "$persist_dir/local/autoclaw-updater",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "checkver": {
+        "url": "https://autoglm.aminer.cn/autoclaw/updates/latest.yml",
+        "regex": "version:\\s*([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://autoglm.aminer.cn/autoclaw/updates/autoclaw-$version-setup.exe#/dl.7z",
+                "hash": {
+                    "url": "$baseurl/latest.yml",
+                    "regex": "sha512:\\s+$base64"
+                }
+            }
+        }
+    }
+}
