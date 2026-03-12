@@ -1,0 +1,60 @@
+{
+    "version": "4.5.7.22510810",
+    "description": "腾讯云代码助手推出的 AI Agent 办公工具，可自主规划并交付多模态复杂任务结果。",
+    "homepage": "https://www.codebuddy.cn/work/",
+    "license": "Proprietary",
+    "architecture": {
+        "64bit": {
+            "url": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/saas/win32-x64-user/WorkBuddy-win32-x64-user-4.5.7.22510810-8718743108-bf524222.exe",
+            "hash": "8be9f60c1ad4fb8c5ee8c88760e0ea29cd9200c882ee840724e014855497edd4"
+        }
+    },
+    "innosetup": true,
+    "extract_dir": "{code_GetDestDir}",
+    "bin": [
+        [
+            "bin\\workbuddy.cmd",
+            "workbuddy"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "WorkBuddy.exe",
+            "WorkBuddy"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/WorkBuddy",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "home-config",
+                "source": "UserProfile/.workbuddy",
+                "target": "$persist_dir/home",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "module": "scripts/portable.psm1",
+            "log": true
+        }
+    },
+    "checkver": {
+        "url": "https://www.codebuddy.cn/v2/update?platform=workbuddy-win32-x64-user",
+        "jsonpath": "$.url",
+        "regex": "(?<url>.*WorkBuddy-win32-x64-user-(?<version>[\\d.]+)-.*\\.exe)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl"
+            }
+        }
+    }
+}
