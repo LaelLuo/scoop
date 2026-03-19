@@ -1,25 +1,14 @@
 {
-    "version": "0.10.0",
-    "description": "AI-native design editor. Open-source Figma alternative.",
-    "homepage": "https://openpencil.dev",
+    "version": "0.4.3",
+    "description": "The world's first open-source AI-native vector design tool and the first to feature concurrent Agent Teams.",
+    "homepage": "https://op.zseven.tech",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/open-pencil/open-pencil/releases/download/v0.10.0/OpenPencil_0.10.0_x64-setup.exe#/installer.exe",
-            "hash": "6169a1115794d83091c1b5a57ec88462ddc7a1cb4450009e82b1c0d36f669bcd"
-        },
-        "arm64": {
-            "url": "https://github.com/open-pencil/open-pencil/releases/download/v0.10.0/OpenPencil_0.10.0_arm64-setup.exe#/installer.exe",
-            "hash": "a7c7a4f20f6ddac773801a5ae0dd9851086137c190835771d2945d714268dee5"
+            "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.4.3/OpenPencil-0.4.3-x64-win-setup.exe#/dl.7z",
+            "hash": "616cd4d2a5dde16861f2405aabe5cc4655271adfe7c8bae3ae65efeeabce0b7b",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
         }
-    },
-    "installer": {
-        "script": [
-            "$tmpDir = Join-Path $dir '_tmp'",
-            "Expand-7zipArchive \"$dir\\installer.exe\" $tmpDir -Removal",
-            "Move-Item (Join-Path $tmpDir 'OpenPencil.exe') $dir -Force",
-            "Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue"
-        ]
     },
     "shortcuts": [
         [
@@ -31,8 +20,15 @@
         "mappings": [
             {
                 "label": "roaming",
-                "source": "AppData/net.dannote.open-pencil",
+                "source": "AppData/OpenPencil",
                 "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "home-port",
+                "source": "UserProfile/.openpencil",
+                "target": "$persist_dir/home/openpencil",
                 "strategy": "symlink",
                 "ensureTarget": true
             }
@@ -41,16 +37,24 @@
             "log": true
         }
     },
+    "post_install": [
+        "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
+    ],
     "checkver": {
-        "github": "https://github.com/open-pencil/open-pencil"
+        "script": [
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/ZSeven-W/openpencil/releases?per_page=20'",
+            "$latest = $releases | Where-Object { -not $_.draft -and $_.tag_name -match '^v?\\d+\\.\\d+\\.\\d+$' } | Sort-Object -Property @{ Expression = { [version]($_.tag_name.TrimStart('v')) } } -Descending | Select-Object -First 1",
+            "if (-not $latest) {",
+            "  throw 'Failed to locate the latest OpenPencil release.'",
+            "}",
+            "Write-Output $latest.tag_name"
+        ],
+        "regex": "^v(?<version>.+)$"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/open-pencil/open-pencil/releases/download/v$version/OpenPencil_$version_x64-setup.exe#/installer.exe"
-            },
-            "arm64": {
-                "url": "https://github.com/open-pencil/open-pencil/releases/download/v$version/OpenPencil_$version_arm64-setup.exe#/installer.exe"
+                "url": "https://github.com/ZSeven-W/openpencil/releases/download/v$version/OpenPencil-$version-x64-win-setup.exe#/dl.7z"
             }
         }
     }
