@@ -1,5 +1,5 @@
 {
-    "version": "1.4.23",
+    "version": "1.5.0",
     "description": "AI 可编程工作流平台 - 基于 VSCode 的工作流 IDE",
     "homepage": "https://oomol.com/zh-CN/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://static.oomol.com/release/stable/win32/x64/OOMOL Studio-1.4.23-2026-03-05.20.exe",
-            "hash": "e7bfc669d919630f1f8ef2b6c08394b2059588b65152922d560cb7faefd22c7e"
+            "url": "https://static.oomol.com/release/stable/win32/x64/OOMOL Studio-1.5.0-2026-03-25.16.exe",
+            "hash": "98e28a9812b7199e210155f3c5326ce4e63f73717fb92800a6308572503b9d14"
         }
     },
     "innosetup": true,
@@ -55,6 +55,20 @@
             "log": true
         }
     },
+    "pre_install": [
+        "$dynamicExe = Join-Path $dir '{code_GetExeBasename}'",
+        "$mainExe = Join-Path $dir 'OOMOL Studio.exe'",
+        "if ((Test-Path $dynamicExe) -and -not (Test-Path $mainExe)) {",
+        "  info 'Normalizing executable name from dynamic Inno placeholder...'",
+        "  Rename-Item $dynamicExe 'OOMOL Studio.exe'",
+        "}",
+        "$dynamicVisualManifest = Join-Path $dir '{code_GetVisualElementsManifest}'",
+        "$visualManifest = Join-Path $dir 'OOMOL Studio.VisualElementsManifest.xml'",
+        "if ((Test-Path $dynamicVisualManifest) -and -not (Test-Path $visualManifest)) {",
+        "  info 'Normalizing VisualElements manifest name from dynamic Inno placeholder...'",
+        "  Rename-Item $dynamicVisualManifest 'OOMOL Studio.VisualElementsManifest.xml'",
+        "}"
+    ],
     "post_install": [
         "$homeConfig = Join-Path $persist_dir 'home\\config'",
         "$homeState = Join-Path $persist_dir 'home\\state'",
