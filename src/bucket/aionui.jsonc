@@ -1,0 +1,74 @@
+{
+    "version": "1.9.1",
+    "description": "Transform your command-line AI agent into a modern, efficient AI chat interface.",
+    "homepage": "https://www.aionui.com/",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/iOfficeAI/AionUi/releases/download/v1.9.1/AionUi-1.9.1-win-x64.exe#/dl.7z",
+            "hash": "sha512:LMpm/dPnCkZ/hDjf5Jek4gIwqSHnwXJ9gxnR5Y4yMzrkszf76EEQxWJ3+AVrfkS4s4JzasFUnx2MHxLgQFzErA==",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/iOfficeAI/AionUi/releases/download/v1.9.1/AionUi-1.9.1-win-arm64.exe#/dl.7z",
+            "hash": "sha512:tLUmrMPgeK3MurKVFaOjbPNg+4pYP9yBr/EU0LqEP2zj+DG4+6+YLC60zaZ3w+D0hZMkaek9+Q+wGtw3Sy4Www==",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "AionUi.exe",
+            "AionUi"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/AionUi",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "updater",
+                "source": "LocalAppData/aionui-updater",
+                "target": "$persist_dir/local/aionui-updater",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "persist": "data",
+    "checkver": {
+        "github": "https://github.com/iOfficeAI/AionUi"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/iOfficeAI/AionUi/releases/download/v$version/AionUi-$version-win-x64.exe#/dl.7z",
+                "hash": {
+                    "url": "$baseurl/latest.yml",
+                    "regex": "sha512:\\s+$base64"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/iOfficeAI/AionUi/releases/download/v$version/AionUi-$version-win-arm64.exe#/dl.7z",
+                "hash": {
+                    "url": "$baseurl/latest-win-arm64.yml",
+                    "regex": "sha512:\\s+$base64"
+                }
+            }
+        }
+    }
+}
