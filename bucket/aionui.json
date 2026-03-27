@@ -1,20 +1,20 @@
 {
-    "version": "1.9.1",
+    "version": "1.9.2",
     "description": "Transform your command-line AI agent into a modern, efficient AI chat interface.",
     "homepage": "https://www.aionui.com/",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/iOfficeAI/AionUi/releases/download/v1.9.1/AionUi-1.9.1-win-x64.exe#/dl.7z",
-            "hash": "sha512:LMpm/dPnCkZ/hDjf5Jek4gIwqSHnwXJ9gxnR5Y4yMzrkszf76EEQxWJ3+AVrfkS4s4JzasFUnx2MHxLgQFzErA==",
+            "url": "https://github.com/iOfficeAI/AionUi/releases/download/v1.9.2/AionUi-1.9.2-win-x64.exe#/dl.7z",
+            "hash": "sha512:a6899af39b9b775cc3d742229ddde39ee969a1e7e4a42920d229f3f4d74c54c17d256c8809b050a3b7d203f8a2caef303b3beab2b67bbef17adda4bf33c3a81f",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
             ]
         },
         "arm64": {
-            "url": "https://github.com/iOfficeAI/AionUi/releases/download/v1.9.1/AionUi-1.9.1-win-arm64.exe#/dl.7z",
-            "hash": "sha512:tLUmrMPgeK3MurKVFaOjbPNg+4pYP9yBr/EU0LqEP2zj+DG4+6+YLC60zaZ3w+D0hZMkaek9+Q+wGtw3Sy4Www==",
+            "url": "https://github.com/iOfficeAI/AionUi/releases/download/v1.9.2/AionUi-1.9.2-win-arm64.exe#/dl.7z",
+            "hash": "sha512:ec38c1afde00c35fd40bb2d7d61819ae1aab3d441b93d3d36d81b764a0695061055ac49835ce0874767e9c5f6bbb1a31c65817330eccb26a2fb30d4c412174e0",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
