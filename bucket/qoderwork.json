@@ -1,5 +1,5 @@
 {
-    "version": "0.3.3",
+    "version": "0.3.4",
     "description": "QoderWork - Beyond chat, get it done",
     "homepage": "https://qoder.com/qoderwork",
     "license": {
@@ -9,7 +9,7 @@
     "architecture": {
         "64bit": {
             "url": "https://download.qoder.com/qoder-work/releases/latest/QoderWork-Setup-User-x64.exe#/dl.7z",
-            "hash": "64f303745b42062bfc5ce851b121100135b9cd83a519169931c37fd42ff71069",
+            "hash": "df6fa462df06d8a305aa84bbbcaddbbb4832de86c3af5927298af4e82de81986",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\" -Recurse"
