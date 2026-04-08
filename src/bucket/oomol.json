@@ -1,5 +1,5 @@
 {
-    "version": "1.5.0",
+    "version": "1.5.1",
     "description": "AI 可编程工作流平台 - 基于 VSCode 的工作流 IDE",
     "homepage": "https://oomol.com/zh-CN/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://static.oomol.com/release/stable/win32/x64/OOMOL Studio-1.5.0-2026-03-25.16.exe",
-            "hash": "98e28a9812b7199e210155f3c5326ce4e63f73717fb92800a6308572503b9d14"
+            "url": "https://static.oomol.com/release/stable/win32/x64/OOMOL Studio-1.5.1-2026-03-30.20.exe",
+            "hash": "2630212e4b362e3cf6f1004765eb291a06381af5a45a7c222556226e28d65f61"
         }
     },
     "innosetup": true,
@@ -67,6 +67,22 @@
         "if ((Test-Path $dynamicVisualManifest) -and -not (Test-Path $visualManifest)) {",
         "  info 'Normalizing VisualElements manifest name from dynamic Inno placeholder...'",
         "  Rename-Item $dynamicVisualManifest 'OOMOL Studio.VisualElementsManifest.xml'",
+        "}",
+        "$appResourcesDirs = @()",
+        "if (Test-Path $dir) {",
+        "  $appResourcesDirs = Get-ChildItem -Path $dir -Directory -Recurse | Where-Object { $_.FullName -match '[\\\\/]resources[\\\\/]app$' }",
+        "}",
+        "foreach ($appResourcesDir in $appResourcesDirs) {",
+        "  $productJson = Join-Path $appResourcesDir.FullName 'product.json'",
+        "  $duplicateProductJsons = Get-ChildItem -Path $appResourcesDir.FullName -Filter 'product,*.json' -File | Sort-Object { [int]([regex]::Match($_.BaseName, ',(\\d+)$').Groups[1].Value) }",
+        "  if ((-not (Test-Path $productJson)) -and $duplicateProductJsons.Count) {",
+        "    info 'Normalizing duplicate product.json extracted from Inno package...'",
+        "    $productCandidate = $duplicateProductJsons[-1]",
+        "    Rename-Item -LiteralPath $productCandidate.FullName -NewName 'product.json'",
+        "    foreach ($staleProductJson in $duplicateProductJsons | Select-Object -SkipLast 1) {",
+        "      Remove-Item -LiteralPath $staleProductJson.FullName -Force",
+        "    }",
+        "  }",
         "}"
     ],
     "post_install": [
