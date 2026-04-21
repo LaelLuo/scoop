@@ -1,5 +1,5 @@
 {
-    "version": "2.33.1.612",
+    "version": "2.64.0.635",
     "description": "Tencent Yuanbao desktop client powered by Hunyuan and DeepSeek models",
     "homepage": "https://yuanbao.tencent.com/evt/dl",
     "license": {
@@ -9,7 +9,7 @@
     "architecture": {
         "64bit": {
             "url": "https://cdn-hybrid-prod.hunyuan.tencent.com/Desktop/business/channels/yuanbao_7001_x64.exe#/dl.7z",
-            "hash": "3421a68cb59442125becd001d7abbaa744a030139e650bb8366fbf0e400543a3"
+            "hash": "c93ae164712a37d3eecfdf6c02d94208c299abc18258a72234c34bbf09094069"
         }
     },
     "installer": {

@@ -1,12 +1,12 @@
 {
-    "version": "0.4.4",
+    "version": "0.7.4",
     "description": "The world's first open-source AI-native vector design tool and the first to feature concurrent Agent Teams.",
     "homepage": "https://op.zseven.tech",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.4.4/OpenPencil-0.4.4-x64-win-setup.exe#/dl.7z",
-            "hash": "19a1d4fa30ed0cae2d9daf8b604cf5f4ba203f7854319cbd6b26fac68443e4d4",
+            "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.7.4/OpenPencil-0.7.4-x64-win-setup.exe#/dl.7z",
+            "hash": "0f3321f82c9dfc55e630e551f71a80e6fcb43cad5b74b2c70f659da2c72bd1fe",
             "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
         }
     },
@@ -49,15 +49,16 @@
         "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"
     ],
     "checkver": {
+        "url": "https://github.com/ZSeven-W/openpencil/releases",
         "script": [
-            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/ZSeven-W/openpencil/releases?per_page=20'",
-            "$latest = $releases | Where-Object { -not $_.draft -and $_.tag_name -match '^v?\\d+\\.\\d+\\.\\d+$' } | Sort-Object -Property @{ Expression = { [version]($_.tag_name.TrimStart('v')) } } -Descending | Select-Object -First 1",
-            "if (-not $latest) {",
+            "$html = Invoke-WebRequest -Uri $url -UseBasicParsing",
+            "$latest = [regex]::Match($html.Content, '/ZSeven-W/openpencil/releases/tag/v(?<version>\\d+\\.\\d+\\.\\d+)')",
+            "if (-not $latest.Success) {",
             "  throw 'Failed to locate the latest OpenPencil release.'",
             "}",
-            "Write-Output $latest.tag_name"
+            "Write-Output $latest.Groups['version'].Value"
         ],
-        "regex": "^v(?<version>.+)$"
+        "regex": "^(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$"
     },
     "autoupdate": {
         "architecture": {

@@ -48,7 +48,7 @@
         }
     },
     "notes": [
-        "QoderWork 使用官方 latest 安装器直链，当前版本为 0.1.8。",
+        "QoderWork 使用官方 latest 安装器直链。",
         "实机首启已确认：~\\.qoderwork -> persist/qoderwork/home/config。",
         "~\\.qoder 属于 qoder 侧目录，当前清单不做持久化。",
         "checkver 通过请求安装器前 3 MiB 分片并读取文件版本号实现。",

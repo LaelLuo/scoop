@@ -1,12 +1,12 @@
 {
-    "version": "0.2.15",
+    "version": "0.3.0",
     "description": "支持 OpenClaw 一键安装、飞书集成与本地执行的桌面 AI 助手。",
     "homepage": "https://autoglm.zhipuai.cn/autoclaw/",
     "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://autoglm.aminer.cn/autoclaw/updates/autoclaw-0.2.15-setup.exe#/dl.7z",
-            "hash": "sha512:552f555ba0d654f5daf8c4a06ea5ce2585012989fcacf6b59c2928da6d5f4468997ee636b54a1be3240bf0eb280f6f4b17b61d2b36deb8fc3fc03c8ce7066270",
+            "url": "https://autoglm.aminer.cn/autoclaw/updates/autoclaw-0.3.0-setup.exe#/dl.7z",
+            "hash": "sha512:be0bca161c92dcbe4d62276cfb668c809b8682497ed910f3029f82106a9c0380c57a617257551b6a14e8a8cde0885375443c0fcffcba54da9dd85648b93648fc",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue"

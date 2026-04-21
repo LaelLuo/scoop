@@ -1,12 +1,12 @@
 {
-    "version": "0.2.0",
+    "version": "0.5.0",
     "description": "An app for managing GitHub starred repositories.",
     "homepage": "https://github.com/AmintaCCCP/GithubStarsManager",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/AmintaCCCP/GithubStarsManager/releases/download/v0.2.0/GitHub.Stars.Manager.Setup.0.2.0.exe#/dl.7z",
-            "hash": "74aeb741247b4c8173d772af4d1cb3b2402e44185abebda8e04ba77930c55c95",
+            "url": "https://github.com/AmintaCCCP/GithubStarsManager/releases/download/v0.5.0/GitHub.Stars.Manager.Setup.0.5.0.exe#/dl.7z",
+            "hash": "3f63e0df5705ea65e1d7508238f129893f623bfdfa4434060b1f052a4bdd224e",
             "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
         }
     },

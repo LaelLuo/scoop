@@ -1,5 +1,5 @@
 {
-    "version": "2.3.19583",
+    "version": "2.3.20623",
     "description": "Trae IDE integrates seamlessly into your workflow, collaborating with you to maximize performance and efficiency.",
     "homepage": "https://www.trae.ai/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/2.3.19583/win32/Trae-Setup-x64.exe",
-            "hash": "283041c341826c06b7e0efe7c38e4beabd5aa56f4c86f89db24677bb0782efff"
+            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/2.3.20623/win32/Trae-Setup-x64.exe",
+            "hash": "01e3cfac1f6d2843a65c146ec8720c4d867fff05ec4ffb76fb18495c5a00cb60"
         }
     },
     "innosetup": true,

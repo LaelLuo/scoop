@@ -1,23 +1,63 @@
 {
-    "version": "0.7.4",
-    "description": "The world's first open-source AI-native vector design tool and the first to feature concurrent Agent Teams.",
-    "homepage": "https://op.zseven.tech",
-    "license": "MIT",
+    "homepage": "https://developer.open-douyin.com/",
+    "description": "IDE for ByteDance/Douyin MicroApp Development",
+    "version": "4.5.2",
+    "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.7.4/OpenPencil-0.7.4-x64-win-setup.exe#/dl.7z",
-            "hash": "0f3321f82c9dfc55e630e551f71a80e6fcb43cad5b74b2c70f659da2c72bd1fe",
-            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
+            "url": "https://sf1-cdn-tos.douyinstatic.com/obj/microapp/frontend/ide/package/obj/developer/ide/332737976/win32/%E6%8A%96%E9%9F%B3%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7-4.5.2.exe#/dl.7z",
+            "hash": "sha512:95bf8efc183bcf7b91e16180ad36a7abc3b85b4db7f642ade6bbbdf8d2ed095869370acec39523e01b0fc3c42a35cb1a586c0c109429dd3b448539d2b9b15366b",
+            "installer": {
+                "script": [
+                    "Remove-Item \"$dir\\*\" -Exclude \"app-64.7z\"",
+                    "Expand-7zipArchive \"$dir\\app-64.7z\" \"$dir\"",
+                    "Remove-Item \"$dir\\app-64.7z\""
+                ]
+            }
         }
     },
+    "extract_dir": "$PLUGINSDIR",
     "shortcuts": [
         [
-            "OpenPencil.exe",
-            "OpenPencil"
+            "抖音开发者工具.exe",
+            "抖音开发者工具"
         ]
     ],
+    "checkver": {
+        "url": "https://tron.jiyunhudong.com/api/sdk/check_update?pid=68986292666087352589&uid=14ba7004-3008-47d1-a6b4-aee091f8673e&branch=master&buildId=",
+        "script": [
+            "$currentUrl = $json.architecture.'64bit'.url -replace '#/dl.7z$',''",
+            "$currentMatch = [regex]::Match($currentUrl, '/developer/ide/(?<build>\\d+)/win32/.+?-(?<version>[0-9.]+)\\.exe$')",
+            "if (-not $currentMatch.Success) {",
+            "  throw 'Failed to parse current Douyin IDE build metadata from manifest URL.'",
+            "}",
+            "$responseJson = Invoke-WebRequest -Uri ($url + $currentMatch.Groups['build'].Value) -UseBasicParsing | Select-Object -ExpandProperty Content",
+            "$response = $responseJson | ConvertFrom-Json",
+            "if ($response.data.needUpdate) {",
+            "  $updateMatch = [regex]::Match($responseJson, '/developer/ide/(?<build>\\d+)/win32/.+?-(?<version>[0-9.]+)\\.exe')",
+            "  if (-not $updateMatch.Success) {",
+            "    throw 'Douyin IDE update response did not contain a downloadable installer path.'",
+            "  }",
+            "  Write-Output ($updateMatch.Groups['build'].Value + '|' + $updateMatch.Groups['version'].Value)",
+            "} else {",
+            "  Write-Output ($currentMatch.Groups['build'].Value + '|' + $currentMatch.Groups['version'].Value)",
+            "}"
+        ],
+        "regex": "^(?<build>\\d+)\\|(?<version>[0-9.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://sf1-cdn-tos.douyinstatic.com/obj/microapp/frontend/ide/package/obj/developer/ide/$matchBuild/win32/%E6%8A%96%E9%9F%B3%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7-$version.exe#/dl.7z",
+                "hash": {
+                    "url": "https://sf1-cdn-tos.douyinstatic.com/obj/microapp/frontend/ide/package/obj/developer/ide/$matchBuild/win32/latest-win.yml",
+                    "regex": "sha512:\\s+$base64"
+                }
+            }
+        }
+    },
+    "notes": "Persists observed user data directories '%AppData%\\@byted\\vela' and '%AppData%\\@byted\\miniprogram-ide' via portableProfile mappings.",
     "post_install": [
-        "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Recurse -ErrorAction SilentlyContinue",
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",
         "# 说明：构建阶段会把该文件的内容内联进 post_install/pre_uninstall。",
@@ -155,30 +195,10 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/OpenPencil'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'home-port'; Source = 'UserProfile/.openpencil'; Target = \"$persist_dir/home/openpencil\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'updater'; Source = 'LocalAppData/openpencil-updater'; Target = \"$persist_dir/local/openpencil-updater\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
+        "    @{ Label = 'vela'; Source = 'AppData/@byted/vela'; Target = \"$persist_dir/vela\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'miniprogram-ide'; Source = 'AppData/@byted/miniprogram-ide'; Target = \"$persist_dir/miniprogram-ide\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
         ") -Log:$true"
     ],
-    "checkver": {
-        "url": "https://github.com/ZSeven-W/openpencil/releases",
-        "script": [
-            "$html = Invoke-WebRequest -Uri $url -UseBasicParsing",
-            "$latest = [regex]::Match($html.Content, '/ZSeven-W/openpencil/releases/tag/v(?<version>\\d+\\.\\d+\\.\\d+)')",
-            "if (-not $latest.Success) {",
-            "  throw 'Failed to locate the latest OpenPencil release.'",
-            "}",
-            "Write-Output $latest.Groups['version'].Value"
-        ],
-        "regex": "^(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)$"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/ZSeven-W/openpencil/releases/download/v$version/OpenPencil-$version-x64-win-setup.exe#/dl.7z"
-            }
-        }
-    },
     "pre_uninstall": [
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",
@@ -317,9 +337,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/OpenPencil'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'home-port'; Source = 'UserProfile/.openpencil'; Target = \"$persist_dir/home/openpencil\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
-        "    @{ Label = 'updater'; Source = 'LocalAppData/openpencil-updater'; Target = \"$persist_dir/local/openpencil-updater\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
+        "    @{ Label = 'vela'; Source = 'AppData/@byted/vela'; Target = \"$persist_dir/vela\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'miniprogram-ide'; Source = 'AppData/@byted/miniprogram-ide'; Target = \"$persist_dir/miniprogram-ide\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
         ") -Log:$true"
     ]
 }
