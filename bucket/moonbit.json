@@ -1,12 +1,12 @@
 {
-    "version": "0.1.20260417",
+    "version": "0.1.20260427",
     "description": "MoonBit 语言的官方 CLI 工具链（moon 编译器、构建系统、包管理器及 MoonPilot 等）。",
     "homepage": "https://www.moonbitlang.com/",
     "license": "AGPL-3.0-only",
     "architecture": {
         "64bit": {
             "url": "https://cli.moonbitlang.com/binaries/latest/moonbit-windows-x86_64.zip",
-            "hash": "7c708447927ddb16bb04ff6e5b1987c4a066cf7aab93105696c4670483b8ebe4"
+            "hash": "fcf61f5b019c26088794b6675b617a8737eeaa30ae5ebdc3c4627899fedc33c7"
         }
     },
     "env_set": {
