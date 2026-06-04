@@ -247,7 +247,10 @@ function mergeCanonicalFields(src: Manifest, bucket: Manifest | undefined): Mani
     }
 
     if ((bucket as any).architecture !== undefined) {
-        (merged as any).architecture = (bucket as any).architecture;
+        (merged as any).architecture = mergeArchitectureCanonical(
+            (src as any).architecture,
+            (bucket as any).architecture
+        );
     }
 
     if ((bucket as any).extract_dir !== undefined) {
@@ -263,6 +266,45 @@ function mergeCanonicalFields(src: Manifest, bucket: Manifest | undefined): Mani
     }
 
     return merged;
+}
+
+function mergeArchitectureCanonical(srcArch: unknown, bucketArch: unknown): unknown {
+    if (!isPlainObject(bucketArch)) {
+        return bucketArch;
+    }
+
+    if (!isPlainObject(srcArch)) {
+        return bucketArch;
+    }
+
+    const mergedArch: Record<string, unknown> = JSON.parse(JSON.stringify(srcArch));
+
+    for (const [archKey, bucketEntry] of Object.entries(bucketArch)) {
+        const srcEntry = mergedArch[archKey];
+
+        if (!isPlainObject(bucketEntry) || !isPlainObject(srcEntry)) {
+            mergedArch[archKey] = bucketEntry;
+            continue;
+        }
+
+        const mergedEntry: Record<string, unknown> = JSON.parse(JSON.stringify(srcEntry));
+
+        if ((bucketEntry as any).url !== undefined) {
+            mergedEntry.url = (bucketEntry as any).url;
+        }
+
+        if ((bucketEntry as any).hash !== undefined) {
+            mergedEntry.hash = (bucketEntry as any).hash;
+        }
+
+        if ((bucketEntry as any).extract_dir !== undefined) {
+            mergedEntry.extract_dir = (bucketEntry as any).extract_dir;
+        }
+
+        mergedArch[archKey] = mergedEntry;
+    }
+
+    return mergedArch;
 }
 
 function hasCanonicalDiff(src: Manifest, merged: Manifest): boolean {
@@ -306,6 +348,10 @@ function hasCanonicalDiff(src: Manifest, merged: Manifest): boolean {
     const mergedHashJson = mergedHash === undefined ? "" : JSON.stringify(mergedHash);
 
     return srcHashJson !== mergedHashJson;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function buildInvokeBlock(action: "Install" | "Uninstall", profile: PortableProfile): string[] {
