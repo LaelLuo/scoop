@@ -1,0 +1,46 @@
+{
+    "version": "15.9.0",
+    "description": "终端优先的 AI 编码代理，内置文件编辑、搜索、浏览器、子代理与会话能力",
+    "homepage": "https://omp.sh/",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/can1357/oh-my-pi/releases/download/v15.9.0/omp-windows-x64.exe",
+            "hash": "648620c86df140d3bf0596c7533a0358dfa1bf893d10d528d449b5e66348c6e8"
+        }
+    },
+    "bin": [
+        [
+            "omp-windows-x64.exe",
+            "omp"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "home-omp",
+                "source": "UserProfile/.omp",
+                "target": "$persist_dir/home/.omp",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "notes": [
+        "OMP 在 Windows 上完整使用通常需要 bash shell。建议安装 git 以提供 Git Bash。",
+        "如果未自动识别 bash，可在 ~/.omp/agent/settings.json 中设置 shellPath。"
+    ],
+    "checkver": {
+        "github": "https://github.com/can1357/oh-my-pi"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/can1357/oh-my-pi/releases/download/v$version/omp-windows-x64.exe"
+            }
+        }
+    }
+}
