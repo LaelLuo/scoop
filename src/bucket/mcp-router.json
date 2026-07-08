@@ -1,5 +1,5 @@
 {
-    "version": "0.6.2",
+    "version": "0.6.3",
     "description": "统一管理 Model Context Protocol (MCP) 服务器的桌面应用。",
     "homepage": "https://github.com/mcp-router/mcp-router",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/mcp-router/mcp-router/releases/download/v0.6.2/MCP.Router-win32-x64-0.6.2.zip",
-            "hash": "71121b15c1cb89b782695415bf98d88441188a313bc8c66c296fadeae3d5b0c1"
+            "url": "https://github.com/mcp-router/mcp-router/releases/download/v0.6.3/MCP.Router-win32-x64-0.6.3.zip",
+            "hash": "c49f2d2ce0d0006885d6b57a67480b7f679375ae8252d993b6e69fe63d62bc93"
         }
     },
     "shortcuts": [
