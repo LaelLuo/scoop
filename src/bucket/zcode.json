@@ -1,12 +1,12 @@
 {
-    "version": "3.2.5",
+    "version": "3.3.1",
     "description": "智谱 ZCode - GLM 官方适配的 AI 编程开发工具（IDE）。",
     "homepage": "https://zcode.z.ai/cn",
     "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://cdn-zcode.z.ai/zcode/electron/releases/3.2.5/ZCode-3.2.5-win-x64.exe#/dl.7z",
-            "hash": "sha256:7825f599bcbc0214af750a7978515875638b513a3a2a7c1cf0d260f3ff6c13c6"
+            "url": "https://cdn-zcode.z.ai/zcode/electron/releases/3.3.1/ZCode-3.3.1-win-x64.exe#/dl.7z",
+            "hash": "52366c3c58cdbc6596f0c153a35b81563f9781d21df867ed43ed8530f2add4d3"
         }
     },
     "pre_install": [
@@ -19,6 +19,35 @@
             "ZCode"
         ]
     ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "home",
+                "source": "UserProfile/.zcode",
+                "target": "$persist_dir/home",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "roaming",
+                "source": "AppData/ZCode",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "updater",
+                "source": "LocalAppData/@zcodedesktop-updater",
+                "target": "$persist_dir/local/zcode-updater",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
     "checkver": {
         "url": "https://zcode.z.ai/cn/changelog",
         "regex": "font-mono text-sm\">([\\d.]+)</span>"
