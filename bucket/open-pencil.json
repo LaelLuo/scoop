@@ -6,13 +6,12 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.8.0/OpenPencil-0.8.0-x64-win-setup.exe#/dl.7z",
-            "hash": "29beb25ba1831e669cf4a597c1ca1bdea3e814ec842444766190c804e2a7ea8c",
-            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
+            "hash": "29beb25ba1831e669cf4a597c1ca1bdea3e814ec842444766190c804e2a7ea8c"
         }
     },
     "shortcuts": [
         [
-            "OpenPencil.exe",
+            "openpencil-desktop.exe",
             "OpenPencil"
         ]
     ],
