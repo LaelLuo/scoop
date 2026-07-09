@@ -1,12 +1,12 @@
 {
-    "version": "3.3.1",
+    "version": "3.3.3",
     "description": "智谱 ZCode - GLM 官方适配的 AI 编程开发工具（IDE）。",
     "homepage": "https://zcode.z.ai/cn",
     "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://cdn-zcode.z.ai/zcode/electron/releases/3.3.1/ZCode-3.3.1-win-x64.exe#/dl.7z",
-            "hash": "52366c3c58cdbc6596f0c153a35b81563f9781d21df867ed43ed8530f2add4d3"
+            "url": "https://cdn-zcode.z.ai/zcode/electron/releases/3.3.3/ZCode-3.3.3-win-x64.exe#/dl.7z",
+            "hash": "9799670b6cfb7b1e7ae87af3ebec6a440360fe39749e7cfd9274656f042a541d"
         }
     },
     "pre_install": [
