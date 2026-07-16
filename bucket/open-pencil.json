@@ -1,12 +1,12 @@
 {
-    "version": "0.8.0",
+    "version": "0.8.1",
     "description": "The world's first open-source AI-native vector design tool and the first to feature concurrent Agent Teams.",
     "homepage": "https://op.zseven.tech",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.8.0/OpenPencil-0.8.0-x64-win-setup.exe#/dl.7z",
-            "hash": "29beb25ba1831e669cf4a597c1ca1bdea3e814ec842444766190c804e2a7ea8c"
+            "url": "https://github.com/ZSeven-W/openpencil/releases/download/v0.8.1/OpenPencil-0.8.1-x64-win-setup.exe#/dl.7z",
+            "hash": "c2a20f9fd71b7c27ae3600bc06bd92a3b764aa8d029a6f6b07f01b62e0e666ff"
         }
     },
     "shortcuts": [
