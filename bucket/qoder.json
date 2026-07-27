@@ -1,5 +1,5 @@
 {
-    "version": "1.18.0",
+    "version": "1.18.2",
     "description": "Qoder - The Agentic Coding Platform，AI 驱动的智能编程平台，专为真实软件开发而设计",
     "homepage": "https://qoder.com/",
     "license": {
@@ -22,8 +22,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://qoder-ide.oss-accelerate.aliyuncs.com/release/1.18.0/QoderUserSetup-x64.exe",
-            "hash": "50f2bdab7760d1564b644c21dbea07a76b7e1b4c9d77c447fecfc4a5e3911289"
+            "url": "https://qoder-ide.oss-accelerate.aliyuncs.com/release/1.18.2/QoderUserSetup-x64.exe",
+            "hash": "1c3b0b9ccabe9d41eafa5ec241a1308b80af71823255349c5f0cceb5834b4a08"
         }
     },
     "innosetup": true,
