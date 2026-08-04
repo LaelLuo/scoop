@@ -1,12 +1,12 @@
 {
-    "version": "17.2.7",
+    "version": "17.2.8",
     "description": "终端优先的 AI 编码代理，内置文件编辑、搜索、浏览器、子代理与会话能力",
     "homepage": "https://omp.sh/",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/can1357/oh-my-pi/releases/download/v17.2.7/omp-windows-x64.exe",
-            "hash": "be0fad104e160ae2ef6ffb7e6eeeff51f8b2de0fecaca6fc0c15e9ce1ce94575"
+            "url": "https://github.com/can1357/oh-my-pi/releases/download/v17.2.8/omp-windows-x64.exe",
+            "hash": "49d54e72787ee2afe27bf3f87e2be533eca71479ab155c2773a05ec93e5370e9"
         }
     },
     "bin": [
