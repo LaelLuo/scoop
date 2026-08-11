@@ -1,12 +1,12 @@
 {
-    "version": "0.191.1",
+    "version": "0.193.0",
     "description": "Factory CLI（droid）命令行工具，用于连接 Factory 平台与本地开发环境。",
     "homepage": "https://docs.factory.ai/cli/getting-started/overview",
     "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://downloads.factory.ai/factory-cli/releases/0.191.1/windows/x64/droid.exe",
-            "hash": "70611b01afe2e1e9d3470337b18f956c8c7bd2048faee21bdef84e6951282117"
+            "url": "https://downloads.factory.ai/factory-cli/releases/0.193.0/windows/x64/droid.exe",
+            "hash": "0496e137f4b193f727c283fd6e082d61e6803dbd9b19180a1ed39d2110ed1448"
         }
     },
     "bin": "droid.exe",
