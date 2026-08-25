@@ -23,8 +23,25 @@
     ],
     "persist": "Options.ini",
     "checkver": {
-        "url": "https://internal.eassos.com/update/diskgenius/update.php",
-        "regex": "\\[([\\d.]+)\\]"
+        "script": [
+            "# gate: only report upstream version after its mirror release exists",
+            "$up = ''",
+            "try {",
+            "    $html = (New-Object System.Net.WebClient).DownloadString('https://internal.eassos.com/update/diskgenius/update.php')",
+            "    if ($html -match '\\[([\\d.]+)\\]') { $up = $Matches[1] }",
+            "} catch { }",
+            "if ($up) {",
+            "    try {",
+            "        $req = [System.Net.HttpWebRequest]::Create(\"https://github.com/LaelLuo/scoop/releases/tag/diskgenius-zh-v$up\")",
+            "        $req.Method = 'HEAD'",
+            "        $req.AllowAutoRedirect = $false",
+            "        $resp = $req.GetResponse()",
+            "        if ($resp.StatusCode -eq 'OK') { Write-Output $up }",
+            "        $resp.Close()",
+            "    } catch { }",
+            "}"
+        ],
+        "regex": "([\\d.]+)"
     },
     "notes": "Chinese edition mirrored to this bucket's GitHub Releases via scripts/mirror-diskgenius.ps1 (upstream CN distribution is Lanzou-webdisk only).",
     "autoupdate": {

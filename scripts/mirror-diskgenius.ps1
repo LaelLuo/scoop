@@ -65,6 +65,7 @@ bun build.ts --only diskgenius-zh
 Pop-Location
 git add -- bucket/diskgenius-zh.json src/bucket/diskgenius-zh.json
 git commit -m "diskgenius-zh: Update to version $upstream (mirror from Lanzou)"
+git pull --rebase
 git push
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "DONE $upstream"
