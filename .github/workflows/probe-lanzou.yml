@@ -1,0 +1,73 @@
+name: Probe Lanzou
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check browsers available on runner
+        run: |
+          which google-chrome google-chrome-stable msedge 2>/dev/null || true
+          google-chrome --version 2>/dev/null || true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install playwright-core
+        run: npm init -y >/dev/null && npm i playwright-core >/dev/null 2>&1 && echo ok
+
+      - name: Download via real Chrome (headed under xvfb)
+        run: |
+          cat > dl.cjs <<'EOF'
+          const { chromium } = require('playwright-core');
+          (async () => {
+            const browser = await chromium.launch({
+              channel: 'chrome',
+              headless: false,
+            });
+            const ctx = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+              extraHTTPHeaders: { Referer: 'https://www.diskgenius.cn/' },
+            });
+            const page = await ctx.newPage();
+            console.log('goto share page...');
+            await page.goto('https://eassos.lanzoue.com/DG64', { waitUntil: 'domcontentloaded', timeout: 45000 });
+            await page.waitForTimeout(3000);
+
+            let frame = page.frames().find(f => f.url().includes('/fn?'));
+            if (!frame) {
+              await page.waitForTimeout(5000);
+              frame = page.frames().find(f => f.url().includes('/fn?'));
+            }
+            if (!frame) throw new Error('fn iframe not found; frames=' + page.frames().map(f => f.url().slice(0,50)).join('|'));
+            console.log('fn frame ok');
+
+            const href = await frame.locator('a').first().getAttribute('href');
+            if (!href) throw new Error('no href');
+            console.log('href ok');
+
+            const p2 = await ctx.newPage();
+            const dlP = p2.waitForEvent('download', { timeout: 90000 }).catch(() => null);
+            try {
+              await p2.goto(href, { timeout: 30000 });
+              console.log('page loaded (challenge?):', await p2.title());
+              throw new Error('no download triggered');
+            } catch (e) {
+              const d = await dlP;
+              if (!d) throw e;
+              await d.saveAs('/tmp/DG6201829_x64.zip');
+              const size = require('fs').statSync('/tmp/DG6201829_x64.zip').size;
+              if (size < 1000000) throw new Error('too small: ' + size);
+              console.log('SUCCESS size=' + size);
+            }
+            await browser.close();
+          })().catch(e => { console.error('FAIL:', e.message); process.exit(1); });
+          EOF
+          sudo apt-get install -y xvfb >/dev/null 2>&1 || true
+          xvfb-run -a node dl.cjs
+
+      - name: Hash
+        if: success()
+        run: sha256sum /tmp/DG6201829_x64.zip
