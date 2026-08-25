@@ -1,0 +1,68 @@
+name: Probe Lanzou
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe lanzou download chain
+        env:
+          UA: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
+          BASE: 'https://eassos.lanzoue.com'
+          SHARE: 'DG64'
+        run: |
+          set -x
+          # 1. share page
+          code=$(curl -s -o /tmp/share.html -w '%{http_code}' -A "$UA" -H "Referer: https://www.diskgenius.cn/" --max-time 30 "$BASE/$SHARE")
+          echo "share: http=$code size=$(wc -c < /tmp/share.html)"
+          iframe=$(grep -oP 'iframe[^>]+src="\K[^"]+' /tmp/share.html | head -1)
+          echo "iframe: ${iframe:0:60}..."
+
+          # 2. iframe page
+          code=$(curl -s -o /tmp/fn.html -w '%{http_code}' -A "$UA" -H "Referer: $BASE/$SHARE" --max-time 30 "$BASE$iframe")
+          echo "fn: http=$code size=$(wc -c < /tmp/fn.html)"
+          sign=$(grep -oP "var\s+wp_sign\s*=\s*'\K[^']+" /tmp/fn.html)
+          ajaxdata=$(grep -oP "var\s+ajaxdata\s*=\s*'\K[^']*" /tmp/fn.html)
+          fileid=$(grep -oP '/ajaxfile\.php\?file=\K\d+' /tmp/fn.html)
+          kdns=$(grep -oP 'var\s+kdns\s*=\s*\K\d+' /tmp/fn.html)
+          echo "sign=${sign:0:12}... fileid=$fileid kdns=$kdns"
+
+          # 3. ajaxfile.php
+          resp=$(curl -s -A "$UA" -H "Referer: $BASE$iframe" -H 'X-Requested-With: XMLHttpRequest' \
+            --data-urlencode "action=downprocess" \
+            --data-urlencode "websignkey=$ajaxdata" \
+            --data-urlencode "signs=$ajaxdata" \
+            --data-urlencode "sign=$sign" \
+            --data-urlencode "websign=" \
+            --data-urlencode "kd=${kdns:-1}" \
+            --data-urlencode "ves=1" \
+            --max-time 30 "$BASE/ajaxfile.php?file=$fileid")
+          echo "ajax: ${resp:0:200}"
+          zt=$(echo "$resp" | grep -oP '"zt":\K\d+')
+          dom=$(echo "$resp" | grep -oP '"dom":"\K[^"]+' | sed 's/\\\//\//g')
+          url=$(echo "$resp" | grep -oP '"url":"\K[^"]+' | sed 's/\\\//\//g' | sed 's/\\u002F/\//g')
+          echo "zt=$zt dom=$dom url=${url:0:50}..."
+
+          if [ "$zt" != "1" ]; then echo "AJAX FAILED"; exit 0; fi
+
+          # 4. direct link
+          direct="$dom/file/$url"
+          ct=$(curl -s -o /tmp/direct.out -w '%{content_type}' -A "$UA" -H "Referer: $BASE/$SHARE" --max-time 60 -r 0-1023 "$direct" || true)
+          echo "direct: content-type=$ct size=$(wc -c < /tmp/direct.out)"
+          head -c 200 /tmp/direct.out | strings | head -5
+          if echo "$ct" | grep -qi 'html'; then
+            echo "=== CHALLENGE PAGE (html) ==="
+            cp /tmp/direct.out /tmp/challenge.html
+            # try solving ajax.php challenge
+            cfile=$(grep -oP "'file'\s*:\s*'\K[^']+" /tmp/challenge.html | head -1)
+            csign=$(grep -oP "'sign'\s*:\s*'\K[^']+" /tmp/challenge.html | head -1)
+            echo "challenge file=${cfile:0:20}... sign=$csign"
+            ajaxdir=$(echo "$direct" | grep -oP '^\w+://[^/]+/\K[^?]*' | sed 's|[^/]*$||')
+            cresp=$(curl -s -A "$UA" -H "Referer: $direct" -H 'X-Requested-With: XMLHttpRequest' \
+              --data-urlencode "file=$cfile" --data-urlencode "el=1" --data-urlencode "sign=$csign" \
+              --max-time 30 "$(echo "$direct" | grep -oP '^\w+://[^/]+')/${ajaxdir}ajax.php")
+            echo "challenge ajax: ${cresp:0:200}"
+          else
+            echo "=== DIRECT ZIP STREAM (no challenge) ==="
+          fi
