@@ -6,63 +6,65 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe lanzou download chain
-        env:
-          UA: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
-          BASE: 'https://eassos.lanzoue.com'
-          SHARE: 'DG64'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright + Chromium
         run: |
-          set -x
-          # 1. share page
-          code=$(curl -s -o /tmp/share.html -w '%{http_code}' -A "$UA" -H "Referer: https://www.diskgenius.cn/" --max-time 30 "$BASE/$SHARE")
-          echo "share: http=$code size=$(wc -c < /tmp/share.html)"
-          iframe=$(grep -oP 'iframe[^>]+src="\K[^"]+' /tmp/share.html | head -1)
-          echo "iframe: ${iframe:0:60}..."
+          npm init -y >/dev/null
+          npm i playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+          echo "playwright ready"
 
-          # 2. iframe page
-          code=$(curl -s -o /tmp/fn.html -w '%{http_code}' -A "$UA" -H "Referer: $BASE/$SHARE" --max-time 30 "$BASE$iframe")
-          echo "fn: http=$code size=$(wc -c < /tmp/fn.html)"
-          sign=$(grep -oP "var\s+wp_sign\s*=\s*'\K[^']+" /tmp/fn.html)
-          ajaxdata=$(grep -oP "var\s+ajaxdata\s*=\s*'\K[^']*" /tmp/fn.html)
-          fileid=$(grep -oP '/ajaxfile\.php\?file=\K\d+' /tmp/fn.html)
-          kdns=$(grep -oP 'var\s+kdns\s*=\s*\K\d+' /tmp/fn.html)
-          echo "sign=${sign:0:12}... fileid=$fileid kdns=$kdns"
+      - name: Download via real browser
+        run: |
+          cat > probe.js <<'EOF'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const ctx = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+              referer: 'https://www.diskgenius.cn/',
+            });
+            const page = await ctx.newPage();
+            console.log('goto share page...');
+            await page.goto('https://eassos.lanzoue.com/DG64', { waitUntil: 'domcontentloaded', timeout: 30000 });
+            await page.waitForTimeout(3000);
 
-          # 3. ajaxfile.php
-          resp=$(curl -s -A "$UA" -H "Referer: $BASE$iframe" -H 'X-Requested-With: XMLHttpRequest' \
-            --data-urlencode "action=downprocess" \
-            --data-urlencode "websignkey=$ajaxdata" \
-            --data-urlencode "signs=$ajaxdata" \
-            --data-urlencode "sign=$sign" \
-            --data-urlencode "websign=" \
-            --data-urlencode "kd=${kdns:-1}" \
-            --data-urlencode "ves=1" \
-            --max-time 30 "$BASE/ajaxfile.php?file=$fileid")
-          echo "ajax: ${resp:0:200}"
-          zt=$(echo "$resp" | grep -oP '"zt":\K\d+')
-          dom=$(echo "$resp" | grep -oP '"dom":"\K[^"]+' | sed 's/\\\//\//g')
-          url=$(echo "$resp" | grep -oP '"url":"\K[^"]+' | sed 's/\\\//\//g' | sed 's/\\u002F/\//g')
-          echo "zt=$zt dom=$dom url=${url:0:50}..."
+            // find the /fn? iframe and its download link
+            let frame = page.frames().find(f => f.url().includes('/fn?'));
+            if (!frame) {
+              console.log('no fn iframe yet, frames:', page.frames().map(f => f.url().slice(0, 60)));
+              await page.waitForTimeout(5000);
+              frame = page.frames().find(f => f.url().includes('/fn?'));
+            }
+            if (!frame) throw new Error('fn iframe not found');
+            console.log('fn frame ok:', frame.url().slice(0, 50));
 
-          if [ "$zt" != "1" ]; then echo "AJAX FAILED"; exit 0; fi
+            const link = frame.locator('a', { hasText: '下载' }).first();
+            await link.waitFor({ timeout: 15000 });
+            console.log('download link visible, clicking...');
 
-          # 4. direct link
-          direct="$dom/file/$url"
-          ct=$(curl -s -o /tmp/direct.out -w '%{content_type}' -A "$UA" -H "Referer: $BASE/$SHARE" --max-time 60 -r 0-1023 "$direct" || true)
-          echo "direct: content-type=$ct size=$(wc -c < /tmp/direct.out)"
-          head -c 200 /tmp/direct.out | strings | head -5
-          if echo "$ct" | grep -qi 'html'; then
-            echo "=== CHALLENGE PAGE (html) ==="
-            cp /tmp/direct.out /tmp/challenge.html
-            # try solving ajax.php challenge
-            cfile=$(grep -oP "'file'\s*:\s*'\K[^']+" /tmp/challenge.html | head -1)
-            csign=$(grep -oP "'sign'\s*:\s*'\K[^']+" /tmp/challenge.html | head -1)
-            echo "challenge file=${cfile:0:20}... sign=$csign"
-            ajaxdir=$(echo "$direct" | grep -oP '^\w+://[^/]+/\K[^?]*' | sed 's|[^/]*$||')
-            cresp=$(curl -s -A "$UA" -H "Referer: $direct" -H 'X-Requested-With: XMLHttpRequest' \
-              --data-urlencode "file=$cfile" --data-urlencode "el=1" --data-urlencode "sign=$csign" \
-              --max-time 30 "$(echo "$direct" | grep -oP '^\w+://[^/]+')/${ajaxdir}ajax.php")
-            echo "challenge ajax: ${cresp:0:200}"
-          else
-            echo "=== DIRECT ZIP STREAM (no challenge) ==="
-          fi
+            const [download] = await Promise.all([
+              page.waitForEvent('download', { timeout: 90000 }),
+              link.click(),
+            ]);
+            console.log('download event:', download.suggestedFilename());
+            await download.saveAs('/tmp/DG6201829_x64.zip');
+            const fs = require('fs');
+            const size = fs.statSync('/tmp/DG6201829_x64.zip').size;
+            console.log('saved size:', size);
+            if (size < 1000000) throw new Error('file too small: ' + size);
+            console.log('SUCCESS');
+            await browser.close();
+          })().catch(e => { console.error('FAIL:', e.message); process.exit(1); });
+          EOF
+          node probe.js
+
+      - name: Compute hash
+        if: success()
+        run: |
+          ls -la /tmp/DG6201829_x64.zip
+          sha256sum /tmp/DG6201829_x64.zip
+          file /tmp/DG6201829_x64.zip
