@@ -167,7 +167,7 @@
         ") -Log:$true"
     ],
     "notes": [
-        "首次使用需安装虚拟声卡（如 VB-CABLE），然后在通话/直播/录屏应用中选择 CABLE Input 作为麦克风。",
+        "首次使用先建虚拟麦克风：micyou-cli mics install（自带 VB-CABLE 安装器，需管理员权限），之后在通话/直播/录屏应用中选择 CABLE Input。",
         "三入口共享配置：micyou(GUI) / micyou-cli / micyou-tui，配置已便携化到 persist 目录。",
         "解包需 innounp >= 2.67.11；本机若装过旧日期版本 2025 需 scoop update innounp --force 强制升级。"
     ],
