@@ -174,7 +174,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/ChatCut'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/ChatCut'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'updater'; Source = 'LocalAppData/chatcut-desktop-updater'; Target = \"$persist_dir/updater-blocker\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ],
     "pre_uninstall": [
@@ -315,7 +316,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/ChatCut'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/ChatCut'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'updater'; Source = 'LocalAppData/chatcut-desktop-updater'; Target = \"$persist_dir/updater-blocker\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ]
 }
