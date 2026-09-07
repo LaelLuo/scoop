@@ -1,0 +1,67 @@
+{
+    "version": "2.0.3",
+    "description": "Turn your Android phone into a high-quality microphone for your PC (Wi-Fi / USB / Web)",
+    "homepage": "https://github.com/LanRhyme/MicYou",
+    "license": {
+        // GPLv3 + MicYou Plugin Exception（插件不受 GPL 约束，例外条款见 LICENSE 文件）
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/LanRhyme/MicYou/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LanRhyme/MicYou/releases/download/v2.0.3/MicYou-Win-2.0.3-installer.exe",
+            "hash": "9155cbad11b7e563899a73a9a4884dea6e894ad26323bd0e98ce5c9e3096abba"
+        }
+    },
+    // Inno Setup 6.7.0 64 位装载器：需 innounp >= 2.67.11；main 的 innounp 旧日期版本(2025)
+    // 因版本比较 2025 > 2.71.1 不会自动升级，需 scoop update innounp --force
+    "innosetup": true,
+    "bin": [
+        "micyou.exe",
+        "micyou-cli.exe",
+        "micyou-tui.exe"
+    ],
+    "shortcuts": [
+        [
+            "micyou.exe",
+            "MicYou"
+        ]
+    ],
+    // GUI/CLI/TUI 共享配置：settings.json / ui.json / theme.json 均在 %APPDATA%\micyou（源码 app_config.rs）
+    // WebView2 缓存目录 %LOCALAPPDATA%\com.lanrhyme.micyou 为纯缓存，不便携化
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "config",
+                "source": "AppData/micyou",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "post_install": [
+        // installer.iss 将 onnxruntime.dll 同时装入 {app} 与 {app}\resources，
+        // innounp 对包内重复文件改名 onnxruntime,1.dll，恢复原名
+        "if (Test-Path \"$dir\\resources\\onnxruntime,1.dll\") { Rename-Item \"$dir\\resources\\onnxruntime,1.dll\" 'onnxruntime.dll' }"
+    ],
+    "notes": [
+        "首次使用需安装虚拟声卡（如 VB-CABLE），然后在通话/直播/录屏应用中选择 CABLE Input 作为麦克风。",
+        "三入口共享配置：micyou(GUI) / micyou-cli / micyou-tui，配置已便携化到 persist 目录。",
+        "解包需 innounp >= 2.67.11；本机若装过旧日期版本 2025 需 scoop update innounp --force 强制升级。"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LanRhyme/MicYou/releases/download/v$version/MicYou-Win-$version-installer.exe",
+                "hash": {
+                    "mode": "download"
+                }
+            }
+        }
+    }
+}
