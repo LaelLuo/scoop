@@ -38,6 +38,14 @@
                 "target": "$persist_dir/miniprogram-ide",
                 "strategy": "symlink",
                 "ensureTarget": true
+            },
+            {
+                "label": "updater",
+                "source": "LocalAppData/@bytedminiprogram-ide-updater",
+                "target": "$persist_dir/updater-blocker",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
             }
         ],
         "options": {
@@ -50,14 +58,16 @@
             "$currentUrl = $json.architecture.'64bit'.url -replace '#/dl.7z$',''",
             "$currentMatch = [regex]::Match($currentUrl, '/developer/ide/(?<build>\\d+)/win32/.+?-(?<version>[0-9.]+)\\.exe$')",
             "if (-not $currentMatch.Success) {",
-            "  throw 'Failed to parse current Douyin IDE build metadata from manifest URL.'",
+            "  Write-Output ''",
+            "  return",
             "}",
             "$responseJson = Invoke-WebRequest -Uri ($url + $currentMatch.Groups['build'].Value) -UseBasicParsing | Select-Object -ExpandProperty Content",
             "$response = $responseJson | ConvertFrom-Json",
             "if ($response.data.needUpdate) {",
             "  $updateMatch = [regex]::Match($responseJson, '/developer/ide/(?<build>\\d+)/win32/.+?-(?<version>[0-9.]+)\\.exe')",
             "  if (-not $updateMatch.Success) {",
-            "    throw 'Douyin IDE update response did not contain a downloadable installer path.'",
+            "    Write-Output ''",
+            "    return",
             "  }",
             "  Write-Output ($updateMatch.Groups['build'].Value + '|' + $updateMatch.Groups['version'].Value)",
             "} else {",
