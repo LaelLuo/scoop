@@ -1,6 +1,6 @@
 {
     "version": "1.29.3",
-    "description": "Manage Podman and other container engines from a single UI and tray（laelluo 便携维护版：主数据+漫游缓存+更新器拦截三映射）",
+    "description": "Manage Podman and other container engines from a single UI and tray（laelluo 便携维护版：主数据=config 目录链接对准应用便携检测+漫游缓存+更新器拦截）",
     "homepage": "https://github.com/containers/podman-desktop",
     "license": "Apache-2.0",
     "architecture": {
@@ -22,9 +22,9 @@
     "portableProfile": {
         "mappings": [
             {
-                "label": "home-data",
-                "source": "UserProfile/.local/share/containers/podman-desktop",
-                "target": "$persist_dir/home-data",
+                "label": "config",
+                "source": "$dir/config",
+                "target": "$persist_dir/config",
                 "strategy": "symlink",
                 "ensureTarget": true
             },
