@@ -1,5 +1,5 @@
 {
-    "version": "9.9.31.260528",
+    "version": "9.9.33.260813",
     "description": "An instant messaging software service developed by Tencent",
     "homepage": "https://im.qq.com/pcqq/index.shtml",
     "license": {
@@ -8,16 +8,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.31/release/092069d7/QQ_9.9.31_260528_x64_01.exe#/dl.7z",
-            "hash": "0beb5cb4ff776cba822caa0abadbd53f5892f12628a86dabea1b372c82c086bc"
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x64_01.exe#/dl.7z",
+            "hash": "b25c0d3ce9df764074a9118d0ded927e1b2d7ebf60e306112e8df18a040ec492"
         },
         "32bit": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.31/release/092069d7/QQ_9.9.31_260528_x86_01.exe#/dl.7z",
-            "hash": "3d5841389abaf7c552363d84543a06734939aa2abdf6599fee11f6565ca43db1"
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x86_01.exe#/dl.7z",
+            "hash": "fd7214c7a70a6e0eb46781e0d653d5c56b0d496d2f710b4d5c07939c40b73be6"
         },
         "arm64": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.31/release/092069d7/QQ_9.9.31_260528_arm64_01.exe#/dl.7z",
-            "hash": "c8d3e75914f6cf7b7276b1492a506d67ed6ab15636a69577906745c8b04c843d"
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_arm64_01.exe#/dl.7z",
+            "hash": "ee77d6d8bdfc4f4c9bf9c6d2521322ff410d2614a7e8ba005aaa9703fc9ef174"
         }
     },
     "extract_dir": "Files",
@@ -36,22 +36,27 @@
             "$response = Invoke-WebRequest -Uri $url -UseBasicParsing -Headers $headers",
             "Write-Output $response.Content"
         ],
-        "regex": "(?<url>https://qqdl\\.gtimg\\.cn/qqfile/QQNT/([\\d\\.]+)/release/([0-9a-f]+)/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe)",
+        "regex": "(?<url>https://qqdl\\.gtimg\\.cn/qqfile/QQNT(?:V2)?/([\\d\\.]+)/release/([0-9a-f]+)/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe)",
         "replace": "${3}.${4}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://qqdl.gtimg.cn/qqfile/QQNT/$match1/release/$match2/QQ_$match3_$match4_x64_01.exe#/dl.7z"
+                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_x64_01.exe#/dl.7z"
             },
             "32bit": {
-                "url": "https://qqdl.gtimg.cn/qqfile/QQNT/$match1/release/$match2/QQ_$match3_$match4_x86_01.exe#/dl.7z"
+                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_x86_01.exe#/dl.7z"
             },
             "arm64": {
-                "url": "https://qqdl.gtimg.cn/qqfile/QQNT/$match1/release/$match2/QQ_$match3_$match4_arm64_01.exe#/dl.7z"
+                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_arm64_01.exe#/dl.7z"
             }
         }
     },
+    "notes": [
+        "2026-09-15 实测：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）对 curl/WinHTTP/aria2 等脚本下载器一律 403（Server: Lego Server），仅老路径 qqfile/QQNT 开放，因此 autoupdate 到 9.9.35+ 会因 hash 下载失败而报错。",
+        "当前版本 9.9.33 停在老路径最后一个可下载版本，url 与 sha256 取自 winget-pkgs 仓库 Tencent.QQ.NT 9.9.33.52230 清单（老路径 200 实测可下）。",
+        "解除办法：等腾讯放开 QQNTV2 匿名下载，或手动浏览器下载新版安装包算 hash 后手改清单。"
+    ],
     "post_install": [
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",

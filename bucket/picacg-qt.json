@@ -1,12 +1,12 @@
 {
-    "version": "1.5.5",
+    "version": "1.5.5.1",
     "description": "哔咔漫画 PC 客户端，使用 Qt 实现的多平台漫画阅读与下载工具。",
     "homepage": "https://github.com/tonquer/picacg-qt",
     "license": "LGPL-3.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/tonquer/picacg-qt/releases/download/v1.5.5/bika_v1.5.5_windows_x64.7z",
-            "hash": "9e3331884c85688e40b02ba7453b0a3b3902e675c020e1d846358cc23c772759"
+            "url": "https://github.com/tonquer/picacg-qt/releases/download/v1.5.5/bika_v1.5.5.1_windows_x64.7z",
+            "hash": "2f5bf26130579298a7a8e54c265f06fb54b366703384ec58c09e3eca6fd61433"
         }
     },
     "extract_dir": "bika",
