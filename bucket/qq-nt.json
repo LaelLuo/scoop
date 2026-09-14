@@ -1,5 +1,5 @@
 {
-    "version": "9.9.33.260813",
+    "version": "9.9.35.260902",
     "description": "An instant messaging software service developed by Tencent",
     "homepage": "https://im.qq.com/pcqq/index.shtml",
     "license": {
@@ -8,16 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x64_01.exe#/dl.7z",
-            "hash": "b25c0d3ce9df764074a9118d0ded927e1b2d7ebf60e306112e8df18a040ec492"
-        },
-        "32bit": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x86_01.exe#/dl.7z",
-            "hash": "fd7214c7a70a6e0eb46781e0d653d5c56b0d496d2f710b4d5c07939c40b73be6"
-        },
-        "arm64": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_arm64_01.exe#/dl.7z",
-            "hash": "ee77d6d8bdfc4f4c9bf9c6d2521322ff410d2614a7e8ba005aaa9703fc9ef174"
+            "url": "https://github.com/LaelLuo/scoop/releases/download/qqnt-9.9.35.260902/qqnt-9.9.35.260902-x64.exe#/dl.7z",
+            "hash": "9f4b408e7e33f6d74ddf2b117d6953367a42dbb41af6d82150482d3ffebf05f7"
         }
     },
     "extract_dir": "Files",
@@ -34,24 +26,15 @@
             "$headers = @{ 'Accept-Encoding' = 'gzip' }",
             "$url = 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js'",
             "$response = Invoke-WebRequest -Uri $url -UseBasicParsing -Headers $headers",
-            "$content = $response.Content",
-            "$m = [regex]::Match($content, 'https://qqdl\\.gtimg\\.cn/qqfile/QQNT(?:V2)?/[\\d\\.]+/release/[0-9a-f]+/QQ_[\\d\\.]+_[\\d]+_x86_01\\.exe')",
-            "if (-not $m.Success) { Write-Output $content; exit }",
-            "$bare = $m.Value -replace '_x86_', '_x64_'",
-            "try {",
-            "    $sign = Invoke-RestMethod -Uri 'https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign' -Method Post -ContentType 'application/json' -Headers @{ 'x-oidb' = '{\"uint32_command\":\"0x9b8e\",\"uint32_service_type\":1}' } -Body (@{ url = $bare } | ConvertTo-Json -Compress)",
-            "    if ($sign.retcode -eq 0 -and $sign.data.url) { Write-Output ($m.Value + '|' + $sign.data.url) } else { Write-Output $content }",
-            "} catch {",
-            "    Write-Output $content",
-            "}"
+            "Write-Output $response.Content"
         ],
-        "regex": "(?<url>https://qqdl\\.gtimg\\.cn/qqfile/QQNT(?:V2)?/([\\d\\.]+)/release/([0-9a-f]+)/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe)(?:\\|(?<signedurl>https://[^|]+\\.exe\\?sign=[^|]+))?",
-        "replace": "${3}.${4}"
+        "regex": "QQNT(?:V2)?/([\\d\\.]+)/release/[0-9a-f]+/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe",
+        "replace": "${2}.${3}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchSignedurl#/dl.7z",
+                "url": "https://github.com/LaelLuo/scoop/releases/download/qqnt-$version/qqnt-$version-x64.exe#/dl.7z",
                 "hash": {
                     "mode": "download"
                 }
@@ -59,10 +42,10 @@
         }
     },
     "notes": [
-        "2026-09-15 终局定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）的裸链接对一切脚本下载器 403（Lego 网关）——**不是指纹问题，是缺签名**：官网点击时先 POST 免登录接口 https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign（headers 带 x-oidb：{\"uint32_command\":\"0x9b8e\",\"uint32_service_type\":1}，body {url:裸链接}）换带 ?sign=&t= 的签名 URL（打到 tencent-cos，任何客户端可下）。**签名时效 <1 小时**（实测 1 小时前的票已 403）。",
-        "升级机制（已集成）：checkver script 内置 GetSign 调用，输出「裸链接|签名链接」，autoupdate 64bit 走 $matchSignedurl——**`checkver.ps1 qq-nt -u` 一条命令全自动完成签名+下载+算哈希+更新清单**（09-15 实测哈希与浏览器下载一致）。GetSign 失败时 script 兜底只输出版本源，不影响 checkver。",
-        "清单钉 9.9.33 的纪律：签名 URL 一小时内过期，**写进公开清单必烂**（任何环境的 install 会在过期后 403）——所以升级流程固定为四步：①checkver -u；②scoop update qq-nt（趁签名新鲜直接装，无需预填缓存）；③rm bucket/qq-nt.json 后 bun scripts/build.ts --only qq-nt 回退钉版；④提交推送。autoupdate 已砍单 x64（32bit/arm64 的签名哈希算不出，多架构会让 -u 失败）。备用：scripts/qqnt-fetch.ps1 独立签名下载器。",
-        "替代通道：QQ 客户端自研热更新（QQEX 启动器式版本目录）不破坏 scoop 布局。"
+        "**GitHub 镜像分发（2026-09-15 终态架构）**：腾讯 QQNTV2 分发需动态签名（裸链接对一切脚本下载器 403，签名时效 <1h，由 im.qq.com 免登录 GetSign 接口签发），清单无法直连腾讯发布。故安装包转存为本仓库 Release asset（tag=qqnt-<版本>），清单 url 指向 GitHub——任意客户端无条件可下，签名时效与老包清理问题一并消除。",
+        "版本跟进由 `.github/workflows/qqnt-mirror.yml` 全自动完成（每 6 小时检测腾讯新版 → scripts/qqnt-mirror.ps1 签名下载 → 发 Release → 更新本清单三件套 → 提交）。autoupdate 模板指向 GitHub asset 仅作已有版本的重建通道；新版本必须等 workflow 先发 Release。单 x64 架构（x86/arm64 无镜像源）。",
+        "签名机制细节与备用手动工具见 scripts/qqnt-fetch.ps1 与 scripts/qqnt-mirror.ps1；QQ 客户端自研热更新（QQEX 启动器式版本目录）仍是并行可用的替代通道。",
+        "沿革：2026-09-15 先后经历钉 9.9.33（winget 哈希）、误推签名 URL 回退、checkver 集成 GetSign 的 -u 一键流，最终因「老路径包将被清理、门面无版可钉」切到本镜像架构。"
     ],
     "post_install": [
         "#region scoop-portable-profile",

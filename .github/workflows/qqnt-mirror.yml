@@ -1,0 +1,56 @@
+name: qqnt-mirror
+
+# QQ NT 安装包镜像：腾讯 QQNTV2 分发需动态签名（裸链接对脚本 403，签名时效 <1h），
+# 清单无法直连发布。本 workflow 定时检测新版 -> 签名下载 -> 转存为本仓库 Release ->
+# 清单 url 指向 GitHub asset（任意客户端无条件可下）。
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect and download
+        id: det
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/qqnt-mirror.ps1 -Root .
+
+      - name: Release and update manifest
+        if: steps.det.outputs.skip != 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VER: ${{ steps.det.outputs.version }}
+          HASH: ${{ steps.det.outputs.hash }}
+          FILE: ${{ steps.det.outputs.file }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          gh release create "qqnt-$env:VER" "$env:FILE" --title "QQ NT $env:VER x64（腾讯包镜像）" --notes "腾讯 QQ NT Windows x64 安装包镜像（源：im.qq.com，QQNTV2 签名通道），sha256=$env:HASH" --latest=false
+
+          $src = 'src/bucket/qq-nt.json'
+          $m = Get-Content $src -Raw | ConvertFrom-Json
+          $m.version = $env:VER
+          $m.architecture = [pscustomobject]@{
+              '64bit' = [pscustomobject]@{
+                  url = "https://github.com/LaelLuo/scoop/releases/download/qqnt-$env:VER/qqnt-$env:VER-x64.exe#/dl.7z"
+                  hash = $env:HASH
+              }
+          }
+          $m | ConvertTo-Json -Depth 10 | Set-Content $src -Encoding utf8
+
+          Remove-Item bucket/qq-nt.json -ErrorAction SilentlyContinue
+          bun scripts/build.ts --only qq-nt
+
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add src/bucket/qq-nt.json bucket/qq-nt.json
+          git commit -m ":arrow_up: qq-nt: Mirror to version $env:VER (GitHub asset)"
+          git push
