@@ -1,12 +1,12 @@
 {
-    "version": "1.3.6-20260529",
+    "version": "1.5.0-20260907",
     "description": "A lightweight, cross-platform remote desktop software with support for Web client access.",
     "homepage": "https://www.crossdesk.cn/",
     "license": "LGPL-3.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/kunkundi/crossdesk/releases/download/v1.3.6-20260529/crossdesk-win-x64-v1.3.6-20260529.exe#/dl.7z",
-            "hash": "a80f324fd1390d2d7d61d929385e16615d40763a201e4fe20a0d820e0d1d6e71"
+            "url": "https://github.com/kunkundi/crossdesk/releases/download/v1.5.0-20260907/crossdesk-win-x64-v1.5.0-20260907.exe#/dl.7z",
+            "hash": "7fe5ff1095597348f880f7f9661b62bda68a7500d0375089a1496a813967de9c"
         }
     },
     "shortcuts": [

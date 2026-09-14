@@ -7,10 +7,16 @@
         "64bit": {
             "url": "https://servicewechat.com/wxa-dev-logic/download_redirect?type=x64&from=mpwiki&version_type=1#/installer.exe",
             "hash": "a502dead2e4fb6dcb0b5e157e1f2b9ac00c10a20f1940917112a1f8481ed5ed9"
+        },
+        "32bit": {
+            "url": "https://servicewechat.com/wxa-dev-logic/download_redirect?type=ia32&from=mpwiki&download_version=2012510290&version_type=1#/installer.exe",
+            "hash": "b221ca766c951bd195944517039b829ca2c98df784addc05b89201f9c6f96eac"
         }
     },
     "installer": {
-        "script": "Expand-7zipArchive \"$dir\\installer.exe\" \"$dir\\app\" -Removal"
+        "script": [
+            "Expand-7zipArchive \"$dir\\installer.exe\" \"$dir\\app\" -Removal"
+        ]
     },
     "shortcuts": [
         [
