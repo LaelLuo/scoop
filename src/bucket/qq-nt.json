@@ -97,8 +97,9 @@
         }
     },
     "notes": [
-        "2026-09-15 定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）对一切脚本下载器（curl/WinHTTP/aria2/curl-impersonate/无头/嵌入式 WebView2 的自动导航）一律 403（Server: Lego Server）；仅老路径 qqfile/QQNT 对脚本开放，新路径只放行「真浏览器+真人交互」。因此 autoupdate 的 hash 自动计算不可行，清单版本钉在老路径最后一个可正常安装的 9.9.33（url/sha256 取自 winget-pkgs 并本地 314MB 复验）——**勿把无法自动下载的版本号直接发布到清单**，任何环境的 scoop install/update 都会 403 失败（09-15 曾误推 9.9.35 后即回退，本机经预填缓存装上 9.9.35 不受影响）。",
-        "新版本人工升级全流程（需要时）：①浏览器在 im.qq.com 点下载安装包；②算 sha256 改本清单版本/url/hash 三件套；③rm bucket/qq-nt.json 后 bun scripts/build.ts --only qq-nt 再提交（防产物回写洗回）；④把安装包复制为 scoop 缓存文件 D:\\Scoop\\cache\\qq-nt#<版本>#<sha256(url完整串含#/dl.7z)前【7】位>.7z（7 位不是 8 位，多一位 scoop 不认）；⑤scoop update 后 scoop update qq-nt 命中本地缓存完成安装；⑥本机装完后把清单版本回退到可自动安装的版本再 push（或保持钉版直到腾讯放开）。",
-        "替代更新通道：QQ 客户端自研热更新（QQEX/启动器式版本目录）不破坏 scoop 布局，平时直接让 QQ 自更新即可，scoop 清单版本号与实际运行版本脱节属预期。夜巡对 qq-nt 的 autoupdate available 报错按「上游分发阻断待人工」处理。"
+        "2026-09-15 终局定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）的裸链接对一切脚本下载器 403（Lego 网关）——**不是指纹问题，是缺签名**：官网点击下载时先 POST 免登录接口 https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign（headers 带 x-oidb：{\"uint32_command\":\"0x9b8e\",\"uint32_service_type\":1}，body {url:裸链接}）换取带 ?sign=&t= 的签名 URL（打到 tencent-cos，任何客户端可下）。",
+        "桶内已固化 scripts/qqnt-fetch.ps1（GetSign→下载→输出 sha256 一条龙，已实测哈希与浏览器下载一致）。清单版本钉 9.9.33 的原因：scoop 自身的 autoupdate 下载器不会走签名流程，直接发布 9.9.35 会让任何环境的 install/update 403——**勿把需签名的版本号直接发布进清单**（09-15 曾误推后即回退）。",
+        "新版本升级流程（全自动，无需浏览器人工）：①qqnt-fetch.ps1 下载并取 hash；②改清单 version/url/hash 三件套；③rm bucket/qq-nt.json 后 bun scripts/build.ts --only qq-nt（防产物回写洗回）再提交；④安装包复制为 D:\\Scoop\\cache\\qq-nt#<版本>#<sha256(url完整串含#/dl.7z)前【7】位>.7z（7 位不是 8 位）；⑤scoop update qq-nt 命中缓存装上；⑥装完把清单回退钉版再 push。",
+        "替代通道：QQ 客户端自研热更新（QQEX 启动器式版本目录）不破坏 scoop 布局。夜巡遇 qq-nt autoupdate available 时优先走 qqnt-fetch.ps1 自动流程。"
     ]
 }
