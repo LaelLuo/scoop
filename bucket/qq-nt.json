@@ -34,29 +34,35 @@
             "$headers = @{ 'Accept-Encoding' = 'gzip' }",
             "$url = 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js'",
             "$response = Invoke-WebRequest -Uri $url -UseBasicParsing -Headers $headers",
-            "Write-Output $response.Content"
+            "$content = $response.Content",
+            "$m = [regex]::Match($content, 'https://qqdl\\.gtimg\\.cn/qqfile/QQNT(?:V2)?/[\\d\\.]+/release/[0-9a-f]+/QQ_[\\d\\.]+_[\\d]+_x86_01\\.exe')",
+            "if (-not $m.Success) { Write-Output $content; exit }",
+            "$bare = $m.Value -replace '_x86_', '_x64_'",
+            "try {",
+            "    $sign = Invoke-RestMethod -Uri 'https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign' -Method Post -ContentType 'application/json' -Headers @{ 'x-oidb' = '{\"uint32_command\":\"0x9b8e\",\"uint32_service_type\":1}' } -Body (@{ url = $bare } | ConvertTo-Json -Compress)",
+            "    if ($sign.retcode -eq 0 -and $sign.data.url) { Write-Output ($m.Value + '|' + $sign.data.url) } else { Write-Output $content }",
+            "} catch {",
+            "    Write-Output $content",
+            "}"
         ],
-        "regex": "(?<url>https://qqdl\\.gtimg\\.cn/qqfile/QQNT(?:V2)?/([\\d\\.]+)/release/([0-9a-f]+)/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe)",
+        "regex": "(?<url>https://qqdl\\.gtimg\\.cn/qqfile/QQNT(?:V2)?/([\\d\\.]+)/release/([0-9a-f]+)/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe)(?:\\|(?<signedurl>https://[^|]+\\.exe\\?sign=[^|]+))?",
         "replace": "${3}.${4}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_x64_01.exe#/dl.7z"
-            },
-            "32bit": {
-                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_x86_01.exe#/dl.7z"
-            },
-            "arm64": {
-                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_arm64_01.exe#/dl.7z"
+                "url": "$matchSignedurl#/dl.7z",
+                "hash": {
+                    "mode": "download"
+                }
             }
         }
     },
     "notes": [
-        "2026-09-15 终局定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）的裸链接对一切脚本下载器 403（Lego 网关）——**不是指纹问题，是缺签名**：官网点击下载时先 POST 免登录接口 https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign（headers 带 x-oidb：{\"uint32_command\":\"0x9b8e\",\"uint32_service_type\":1}，body {url:裸链接}）换取带 ?sign=&t= 的签名 URL（打到 tencent-cos，任何客户端可下）。",
-        "桶内已固化 scripts/qqnt-fetch.ps1（GetSign→下载→输出 sha256 一条龙，已实测哈希与浏览器下载一致）。清单版本钉 9.9.33 的原因：scoop 自身的 autoupdate 下载器不会走签名流程，直接发布 9.9.35 会让任何环境的 install/update 403——**勿把需签名的版本号直接发布进清单**（09-15 曾误推后即回退）。",
-        "新版本升级流程（全自动，无需浏览器人工）：①qqnt-fetch.ps1 下载并取 hash；②改清单 version/url/hash 三件套；③rm bucket/qq-nt.json 后 bun scripts/build.ts --only qq-nt（防产物回写洗回）再提交；④安装包复制为 D:\\Scoop\\cache\\qq-nt#<版本>#<sha256(url完整串含#/dl.7z)前【7】位>.7z（7 位不是 8 位）；⑤scoop update qq-nt 命中缓存装上；⑥装完把清单回退钉版再 push。",
-        "替代通道：QQ 客户端自研热更新（QQEX 启动器式版本目录）不破坏 scoop 布局。夜巡遇 qq-nt autoupdate available 时优先走 qqnt-fetch.ps1 自动流程。"
+        "2026-09-15 终局定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）的裸链接对一切脚本下载器 403（Lego 网关）——**不是指纹问题，是缺签名**：官网点击时先 POST 免登录接口 https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign（headers 带 x-oidb：{\"uint32_command\":\"0x9b8e\",\"uint32_service_type\":1}，body {url:裸链接}）换带 ?sign=&t= 的签名 URL（打到 tencent-cos，任何客户端可下）。**签名时效 <1 小时**（实测 1 小时前的票已 403）。",
+        "升级机制（已集成）：checkver script 内置 GetSign 调用，输出「裸链接|签名链接」，autoupdate 64bit 走 $matchSignedurl——**`checkver.ps1 qq-nt -u` 一条命令全自动完成签名+下载+算哈希+更新清单**（09-15 实测哈希与浏览器下载一致）。GetSign 失败时 script 兜底只输出版本源，不影响 checkver。",
+        "清单钉 9.9.33 的纪律：签名 URL 一小时内过期，**写进公开清单必烂**（任何环境的 install 会在过期后 403）——所以升级流程固定为四步：①checkver -u；②scoop update qq-nt（趁签名新鲜直接装，无需预填缓存）；③rm bucket/qq-nt.json 后 bun scripts/build.ts --only qq-nt 回退钉版；④提交推送。autoupdate 已砍单 x64（32bit/arm64 的签名哈希算不出，多架构会让 -u 失败）。备用：scripts/qqnt-fetch.ps1 独立签名下载器。",
+        "替代通道：QQ 客户端自研热更新（QQEX 启动器式版本目录）不破坏 scoop 布局。"
     ],
     "post_install": [
         "#region scoop-portable-profile",
