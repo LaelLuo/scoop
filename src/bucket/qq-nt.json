@@ -1,5 +1,5 @@
 {
-    "version": "9.9.35.260902",
+    "version": "9.9.33.260813",
     "description": "An instant messaging software service developed by Tencent",
     "homepage": "https://im.qq.com/pcqq/index.shtml",
     "license": {
@@ -8,8 +8,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/9.9.35/release/8a8b2a64/QQ_9.9.35_260902_x64_01.exe#/dl.7z",
-            "hash": "9f4b408e7e33f6d74ddf2b117d6953367a42dbb41af6d82150482d3ffebf05f7"
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x64_01.exe#/dl.7z",
+            "hash": "b25c0d3ce9df764074a9118d0ded927e1b2d7ebf60e306112e8df18a040ec492"
+        },
+        "32bit": {
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x86_01.exe#/dl.7z",
+            "hash": "fd7214c7a70a6e0eb46781e0d653d5c56b0d496d2f710b4d5c07939c40b73be6"
+        },
+        "arm64": {
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_arm64_01.exe#/dl.7z",
+            "hash": "ee77d6d8bdfc4f4c9bf9c6d2521322ff410d2614a7e8ba005aaa9703fc9ef174"
         }
     },
     "extract_dir": "Files",
@@ -79,13 +87,18 @@
         "architecture": {
             "64bit": {
                 "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_x64_01.exe#/dl.7z"
+            },
+            "32bit": {
+                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_x86_01.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://qqdl.gtimg.cn/qqfile/QQNTV2/$match1/release/$match2/QQ_$match3_$match4_arm64_01.exe#/dl.7z"
             }
         }
     },
     "notes": [
-        "2026-09-15 定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）对一切脚本下载器（curl/WinHTTP/aria2/curl-impersonate/无头/嵌入式 WebView2 的自动导航）一律 403（Server: Lego Server）；仅老路径 qqfile/QQNT 对脚本开放，且新路径对「真浏览器+真人点击」放行（含嵌入式 WebView2 的交互式下载）。",
-        "因此本清单 autoupdate 的 hash 自动计算已不可行：新版本升级需人工在浏览器里下载安装包算 hash（本次 9.9.35.260902 即此法，文件 sha256 本地实测），且 scoop 安装/更新会因自动下载 403 失败——需把安装包按缓存命名规则（qq-nt#<版本>#<sha256(url)前8位>.7z）预填进 scoop cache 目录后再 update。",
-        "已砍为单 64bit 架构（x86/arm64 的 9.9.35 hash 无来源）。夜巡对 qq-nt 的 autoupdate available 报错按「上游分发阻断待人工」处理，勿反复重试。",
-        "替代更新通道：QQ 客户端自研热更新（QQEX/启动器式版本目录）不破坏 scoop 布局，平时可直接让 QQ 自更新，scoop 清单版本号会与实际运行版本脱节属预期。"
+        "2026-09-15 定性：腾讯新分发路径 qqfile/QQNTV2（9.9.35 起独占）对一切脚本下载器（curl/WinHTTP/aria2/curl-impersonate/无头/嵌入式 WebView2 的自动导航）一律 403（Server: Lego Server）；仅老路径 qqfile/QQNT 对脚本开放，新路径只放行「真浏览器+真人交互」。因此 autoupdate 的 hash 自动计算不可行，清单版本钉在老路径最后一个可正常安装的 9.9.33（url/sha256 取自 winget-pkgs 并本地 314MB 复验）——**勿把无法自动下载的版本号直接发布到清单**，任何环境的 scoop install/update 都会 403 失败（09-15 曾误推 9.9.35 后即回退，本机经预填缓存装上 9.9.35 不受影响）。",
+        "新版本人工升级全流程（需要时）：①浏览器在 im.qq.com 点下载安装包；②算 sha256 改本清单版本/url/hash 三件套；③rm bucket/qq-nt.json 后 bun scripts/build.ts --only qq-nt 再提交（防产物回写洗回）；④把安装包复制为 scoop 缓存文件 D:\\Scoop\\cache\\qq-nt#<版本>#<sha256(url完整串含#/dl.7z)前【7】位>.7z（7 位不是 8 位，多一位 scoop 不认）；⑤scoop update 后 scoop update qq-nt 命中本地缓存完成安装；⑥本机装完后把清单版本回退到可自动安装的版本再 push（或保持钉版直到腾讯放开）。",
+        "替代更新通道：QQ 客户端自研热更新（QQEX/启动器式版本目录）不破坏 scoop 布局，平时直接让 QQ 自更新即可，scoop 清单版本号与实际运行版本脱节属预期。夜巡对 qq-nt 的 autoupdate available 报错按「上游分发阻断待人工」处理。"
     ]
 }
