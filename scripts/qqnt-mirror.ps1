@@ -28,6 +28,17 @@ try {
     $current = (Get-Content $manifestPath -Raw | ConvertFrom-Json).version
     if ($latest -eq $current) { Emit 'skip' 'true'; exit 0 }
 
+    # 防降级：windowsConfig.js 的 CDN 会间歇返回陈旧缓存（2026-09-18 实测返回过老版本 9.9.33），
+    # 检测结果比清单还旧时视为脏数据，跳过本轮等下个周期。
+    try {
+        if ([version]$latest -lt [version]$current) {
+            Write-Warning "检测版本 $latest 低于清单版本 $current，判定为 CDN 陈旧缓存，跳过"
+            Emit 'skip' 'true'; exit 0
+        }
+    } catch [System.Management.Automation.RuntimeException] {
+        # 四段版本号解析失败的极端形态不拦（按有新版处理）
+    }
+
     $bare = $m.Value -replace '_x86_', '_x64_'
     $sign = Invoke-RestMethod -Uri 'https://im.qq.com/http2rpc/gotrpc/noauth/trpc.qqntv2.urlsign.UrlSign/GetSign' `
         -Method Post -ContentType 'application/json' `

@@ -18,12 +18,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: oven-sh/setup-bun@v2
+
       - name: Detect and download
         id: det
         shell: pwsh
         run: pwsh -NoProfile -File scripts/qqnt-mirror.ps1 -Root .
 
-      - name: Release and update manifest
+      - name: Build manifest, release and push
         if: steps.det.outputs.skip != 'true'
         shell: pwsh
         env:
@@ -33,8 +35,7 @@ jobs:
           FILE: ${{ steps.det.outputs.file }}
         run: |
           $ErrorActionPreference = 'Stop'
-          gh release create "qqnt-$env:VER" "$env:FILE" --title "QQ NT $env:VER x64（腾讯包镜像）" --notes "腾讯 QQ NT Windows x64 安装包镜像（源：im.qq.com，QQNTV2 签名通道），sha256=$env:HASH" --latest=false
-
+          # 先构建清单（任何失败止步于此，不留垃圾 Release）
           $src = 'src/bucket/qq-nt.json'
           $m = Get-Content $src -Raw | ConvertFrom-Json
           $m.version = $env:VER
@@ -48,6 +49,9 @@ jobs:
 
           Remove-Item bucket/qq-nt.json -ErrorAction SilentlyContinue
           bun scripts/build.ts --only qq-nt
+
+          # 清单构建成功后才发 Release、提交推送
+          gh release create "qqnt-$env:VER" "$env:FILE" --title "QQ NT $env:VER x64（腾讯包镜像）" --notes "腾讯 QQ NT Windows x64 安装包镜像（源：im.qq.com，QQNTV2 签名通道），sha256=$env:HASH" --latest=false
 
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
