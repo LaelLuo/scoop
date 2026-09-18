@@ -1,0 +1,54 @@
+{
+    "version": "1.1.17",
+    "description": "基于 IntelliJ 平台的开源 Git 图形客户端（JetBrains 独立 Git 客户端的开源重制版），保留 IDEA CE 完整 git 功能。",
+    "homepage": "https://github.com/DetachHead/rebased",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DetachHead/rebased/releases/download/1.1.17/rebased.win.zip",
+            "hash": "20ad1b6733c091f896fcca299824f5a12afb60ba53ea2196c8b3fdb48b81c4d2"
+        }
+    },
+    "shortcuts": [
+        [
+            "bin\\rebased64.exe",
+            "Rebased"
+        ]
+    ],
+    "persist": [
+        "bin\\idea.properties",
+        "bin\\rebased64.exe.vmoptions"
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/JetBrains/IdeaIC1.1",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "module": "scripts/portable.psm1",
+            "log": true
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/DetachHead/rebased"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DetachHead/rebased/releases/download/$version/rebased.win.zip",
+                "hash": {
+                    "mode": "download"
+                }
+            }
+        }
+    },
+    "notes": [
+        "官方便携 zip（根目录平铺布局，区别于 extras 桶的安装器解包版）；比 extras 多了 roaming 映射的完全便携化——%APPDATA%\\JetBrains\\IdeaIC1.1（product-info.json 的 dataDirectoryName 实测）指向 persist/roaming。",
+        "IDE 的应用内更新会下载补丁并运行安装器改写安装目录，可能破坏 scoop 版本目录结构——有更新提示时走 scoop update rebased，勿点应用内。"
+    ]
+}
