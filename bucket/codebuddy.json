@@ -34,7 +34,7 @@
     ],
     "persist": "data",
     "checkver": {
-        "url": "https://www.codebuddy.ai/v2/update?platform=ide-win32-x64-user",
+        "url": "https://www.codebuddy.cn/v2/update?platform=ide-win32-x64-user",
         "jsonpath": "$.url",
         "regex": "(?<url>.*CodeBuddy-win32-x64-user-(?<version>[\\d.]+)-.*\\.exe)",
         "replace": "${version}"
