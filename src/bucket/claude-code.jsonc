@@ -18,6 +18,14 @@
                 "target": "$persist_dir/home",
                 "strategy": "symlink",
                 "ensureTarget": true
+            },
+            {
+                "label": "home-config-json",
+                "source": "UserProfile/.claude.json",
+                "target": "$persist_dir/home/claude.json",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
             }
         ],
         "options": {

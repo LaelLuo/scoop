@@ -163,7 +163,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'home-config'; Source = 'UserProfile/.claude'; Target = \"$persist_dir/home\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'home-config'; Source = 'UserProfile/.claude'; Target = \"$persist_dir/home\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'home-config-json'; Source = 'UserProfile/.claude.json'; Target = \"$persist_dir/home/claude.json\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ],
     "pre_uninstall": [
@@ -304,7 +305,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'home-config'; Source = 'UserProfile/.claude'; Target = \"$persist_dir/home\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'home-config'; Source = 'UserProfile/.claude'; Target = \"$persist_dir/home\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'home-config-json'; Source = 'UserProfile/.claude.json'; Target = \"$persist_dir/home/claude.json\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'file' }",
         ") -Log:$true"
     ]
 }
