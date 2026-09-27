@@ -1,0 +1,43 @@
+{
+    "version": "2.1.283",
+    "description": "Anthropic 官方 Claude Code CLI（原生二进制版，irm claude.ai/install.ps1 同源；区别于 claude 清单的桌面版）。",
+    "homepage": "https://claude.ai/claude-code",
+    "license": "Proprietary",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/anthropics/claude-code/releases/download/v2.1.283/claude-win32-x64.zip",
+            "hash": "07c23b91ee6596914d683ed8bd97b4ed2c002ae5f997859cf4b8d11d7b62fb9c"
+        }
+    },
+    "bin": "claude.exe",
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "home-config",
+                "source": "UserProfile/.claude",
+                "target": "$persist_dir/home",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "module": "scripts/portable.psm1",
+            "log": true
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/anthropics/claude-code"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/anthropics/claude-code/releases/download/v$version/claude-win32-x64.zip",
+                "hash": {
+                    "url": "https://github.com/anthropics/claude-code/releases/download/v$version/SHASUMS256.txt",
+                    "regex": "([0-9a-f]{64})\\s+claude-win32-x64\\.zip"
+                }
+            }
+        }
+    },
+    "notes": "上游为 GitHub Releases 官方原生二进制（与 irm claude.ai/install.ps1 安装通道同源，该脚本被 Cloudflare 挑战不适合清单直连）；autoupdate 哈希取自官方 SHASUMS256.txt 免下载重算；~\\.claude 配置目录已映射 persist。CLI 内置自更新会尝试替换自身二进制，更新走 scoop update claude-code。"
+}
