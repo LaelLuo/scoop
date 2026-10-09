@@ -49,6 +49,7 @@ Get-ChildItem bucket | Select-Object -ExpandProperty Name
 
 - [日常巡检与接管范围](docs/maintenance-runbook.md)：每日 04:00 全量更新、清理与健康巡检，异常处理及用户数据边界。
 - [当前新增收录目标](GOALS.md)：Herdr 方案、验收和正式实施放行状态。
+- [Herdr 安装与更新](docs/herdr-installation.md)：命令入口、持久化、已有数据处理与运行前提。
 
 - `bin/checkver.ps1 <manifest> [-u]`：检查或更新清单版本号及下载地址。
 - `bin/checkhashes.ps1 <manifest>`：校验并刷新安装包 SHA256 值。

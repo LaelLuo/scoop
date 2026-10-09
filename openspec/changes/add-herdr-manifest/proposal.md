@@ -14,4 +14,4 @@
 
 - 新增 src/bucket/herdr.json 与对应生成 bucket/herdr.json。
 - 设计、验收、授权以 [GOALS](../../../GOALS.md) 的 add-herdr 修订 1 为准；详细决策见 [decisions](../../../decisions.md)，证据见 [可行性](../../../docs/herdr-feasibility.md)。
-- 当前仅方案，未获得正式实施放行。
+- 2026-10-09 用户 U3 批准修订 1，进入正式实施与隔离验收。

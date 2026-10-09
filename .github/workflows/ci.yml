@@ -9,6 +9,22 @@ on:
   workflow_dispatch:
 
 jobs:
+  test_herdr:
+    name: Herdr lifecycle
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Bucket
+        uses: actions/checkout@main
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - name: Build and test Herdr
+        shell: pwsh
+        run: |
+          bun scripts/build.ts --only herdr
+          bun test ./tests/herdr-manifest.test.ts
+
   test_powershell:
     name: WindowsPowerShell
     runs-on: windows-latest
