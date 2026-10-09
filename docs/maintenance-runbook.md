@@ -4,7 +4,7 @@
 
 2026-10-09 用户将 ZCode 会话 sess_e39163be-57b2-4cf7-bb14-10b03947b35f 的 Scoop 维护移交当前 Codex 聊天。原 ZCode 定时任务 automation-cc041293-b17f-4686-9bdf-9e143b17a5f1 为每天北京时间 04:00；本轮只读核实为 enabled=0、lifecycle_status=paused、running=0。今天夜巡已完成，接管不重复执行。
 
-本任务沿用原夜巡范围，Herdr 新增清单按 GOALS 的 add-herdr 批次单独推进。2026-10-09 已用 Codex automation 工具创建并回读任务 scoop，状态 ACTIVE、每天北京时间 04:00、绑定当前聊天 01a1209d-56c0-7763-9884-54627cd99b54；持久配置亦核实一致。沿用原任务的每日简短汇总要求，正常时一句话，需决策或动作时单列；执行器未来运行仍依赖本机 Codex 可运行，尚未发生首轮自动验收。
+本任务沿用原夜巡范围，Herdr 新增清单按 GOALS 的 add-herdr 批次单独推进。2026-10-09 已用 Codex automation 工具创建并回读任务 scoop，状态 ACTIVE、每天北京时间 04:00、绑定当前聊天 01a1209d-56c0-7763-9884-54627cd99b54；持久配置亦核实一致。沿用原任务的每日简短汇总要求，正常时一句话，需决策或动作时单列；执行器未来运行仍依赖本机 Codex 可运行。2026-10-10 首轮 heartbeat 已完整执行更新、清理、纯查询 checkver、DiskGenius 和 Actions 核对，证据在 workdir/auto-update/2026-10-10.md。
 
 ## 执行顺序
 
