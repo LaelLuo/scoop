@@ -32,3 +32,7 @@
 3. 修复复核：另派审核者核对 P1/P2，文档与自有失效链接合同修正后复核。
 4. 交付完整性：正式源/产物、局部模块、测试/CI、使用说明与验收材料一起提交。Tests workflow 原本 disabled_manually，保持该设置，Herdr CI job 尚未运行；远端提交在最终交付时核实，不以前述通过代替远端状态。
 5. 遗留审计：代码问题已修，无新增 backlog。全桶既有失败不属于本批次；A3 执行过程约束偏差没有自定豁免，保持未勾并报告，不能宣布全批次验收完成。
+
+## 远端交付核实
+
+实现提交 `178164d39fb61a6798ddfbe67fd35ae54b413b12` 已推送至 origin/master；git ls-remote 与本地 HEAD 一致。GitHub contents API 回读 bucket/herdr.json 的 blob 为 `8c26c206ba473063821b25e81af1b454b6948994`，与暂存审查的产物一致。最终候选回归仍为 49 pass/18 fail，逐项归一化名称与错误和基线一致。交付不改变 A3 未通过状态，远端 Tests 工作流仍未运行。

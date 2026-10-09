@@ -15,7 +15,7 @@
 
 ## 项目验收
 
-- [ ] P1 Herdr 通过本 bucket 安装与升级，维护者可据记录复核来源和用户数据边界。证据：未验证。
+- [ ] P1 Herdr 通过本 bucket 安装与升级，维护者可据记录复核来源和用户数据边界。证据：A1/A2 已验证并交付；A3 执行过程约束偏差保持未通过，见 [实施验证](docs/herdr-verification.md)。
 
 ## 批次
 
@@ -35,8 +35,9 @@
 #### 关键问题与可行性
 
 - 关键阻断：无
+- 代码无新增阻断；A3 执行过程约束出现偏差，缺完整事前字节基线，未自定豁免，整批验收未完成。
 - 已验证 v0.9.3 官方 x64 ZIP 的 SHA-256、完整包结构、版本/帮助/配置检查；固定版本源码证明默认配置为 AppData/herdr、状态为 LocalAppData/herdr，XDG 覆写继续尊重。见 [可行性记录](docs/herdr-feasibility.md)。
-- 清单与隔离生命周期已实现；验收证据见 [Herdr 验证](docs/herdr-verification.md)，最终独立复核与远端交付收口中。
+- 清单与隔离生命周期已实现；验收证据见 [Herdr 验证](docs/herdr-verification.md)。独立复核已结束，实现提交 178164d 已推送并核实远端清单；A3 保持未勾。
 
 #### 设计
 
@@ -59,7 +60,7 @@
 - [x] 形成内嵌设计与 [OpenSpec 提案](openspec/changes/add-herdr-manifest/proposal.md)，运行结构校验和提案 strict 校验，完成独立对账。证据：[独立初审与复核](docs/reviews/herdr-proposal-2026-10-09.md)。
 - [x] 一次呈交本修订，获得正式实施放行。证据：2026-10-09 用户 U3“可以”。
 - [ ] 放行后新增 src 清单并构建 bucket，验证 A1/A2/A3；隔离安装的 Scoop、AppData、LocalAppData 和缓存位于 workdir/herdr，不复用用户运行态。默认目录验收清除子进程继承的 XDG_CONFIG_HOME/XDG_STATE_HOME/HERDR_CONFIG_PATH，覆写子进程 APPDATA/LOCALAPPDATA 至隔离目录；自定义路径验收另设独立 XDG/配置路径，两个分支分别核证。升级场景以同版本强制更新验证钩子，不谎称跨未来版本验证。
-- [ ] 完成独立审核、用户视角走查、修复复核、交付完整性和遗留处置，显式提交并推送。
+- [x] 完成独立审核、用户视角走查、修复复核、交付完整性和遗留处置，显式提交并推送。证据：[交付审核](docs/reviews/herdr-delivery-2026-10-09.md)，实现提交 178164d 已推送，远端 master 与本地一致，GitHub 清单 blob 与本地一致。遗留审计保留 A3 偏差，不表示整批验收通过。
 
 #### 审核与授权
 
