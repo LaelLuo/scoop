@@ -24,7 +24,7 @@
 
 ## 2. 夜间例行 SOP（现行口径）
 
-权威步骤以 `docs/maintenance-runbook.md` 为准（Codex 线 8 步）；下面是同一流程的可执行摘要与**判断口径**（历史任务书里有更细的先例说明）：
+权威步骤以 `docs/maintenance-runbook.md` 为准（Codex 线 8 步）；下面是同一流程的可执行摘要与**判断口径**（历史任务书里有更细的先例说明）。2026-10-20 用户要求补一项 GitHub Issues 巡检（本摘要第 8 步；runbook 暂未同步，是否并入 runbook 由维护者决定）：
 
 1. **更新**：`scoop update`（刷 Scoop 本体 + 各桶）→ `scoop update --all`（**必须 `--all`，不要写裸 `*`**，Git Bash 会把 `*` 展开成文件名）。输出追加进当天日志。更新慢时耐心等待，不要中途打断（2026-09-27 教训：自设 10 分钟超时把更新拦腰切断，违反纪律）。
 2. **分类处理更新输出**：
@@ -40,7 +40,8 @@
 5. **qq-nt 镜像巡检**：只观察。连续 ≥2 天 available → `gh run list -R LaelLuo/scoop --workflow=qqnt-mirror.yml --limit 3` 查失败原因；必要时本地跑兜底（见 §4 坑清单第 8 条）。
 6. **diskgenius-zh 镜像巡检**：`pwsh -NoProfile -File <仓库>/scripts/mirror-diskgenius.ps1`。无新版自动秒退；有新版会弹本机 Edge 走蓝奏云下载并自动完成 Release、清单、commit/push。遇验证码阻断只报告，不反复重试。
 7. **Actions 巡检**：`gh run list -R LaelLuo/scoop --limit 15`；failure 用 `gh run view <id> -R LaelLuo/scoop --log-failed`。清单类问题（checkver throw、regex 失效、hash 失效）走修复流程；单次网络抖动标记观察。
-8. **汇总**：日志末尾追加中文小结（更新/跳过/修复/清理/checkver/Actions/diskgenius），最终回复同样简短；一切正常一句话，需用户决策的单列。夜间全程不要询问用户（用户在睡觉）。
+8. **Issues 巡检（2026-10-20 用户要求新增）**：`gh issue list -R LaelLuo/scoop --state open --limit 50`。有 open 就分诊——清单/下载/hash 类问题按「3. 清单修复标准流程与核心机制」复现验证后修复；用户使用问题用证据回答；按仓库既有标签口径记录（`verified`＝已复现核实、`hash-fix-needed`＝哈希待修、`review-needed`＝待复核，其余用标准标签，以仓库实际 label 为准）。处理结果写进当天日志；0 条一句话带过。
+9. **汇总**：日志末尾追加中文小结（更新/跳过/修复/清理/checkver/Actions/Issues/diskgenius），最终回复同样简短；一切正常一句话，需用户决策的单列。夜间全程不要询问用户（用户在睡觉）。
 
 ## 3. 清单修复标准流程与核心机制
 
@@ -89,6 +90,7 @@
 - **仓库**：`HEAD = 9cb5e8b`（`:sparkles: feat(workbuddy): 清单接管 WORKBUDDY_ELECTRON_BIN 环境变量`，本文提交前的提交），与 `origin/master` 同步，工作区干净；61 个清单。
 - **最近修复**：`178164d` herdr 收录；`6ed06b2` checkver GitHub API 模式 + CrossDesk 追平；`156be44` virtual-browser 2.4.0 哈希；`9cb5e8b` workbuddy 清单新增 env_set（`WORKBUDDY_ELECTRON_BIN=$dir\WorkBuddy.exe`，本机值暂未变，待下次 `scoop update workbuddy` 生效，见坑 3）。
 - **最近一晚夜巡（2026-10-20 04:00）**：12 项待更新、9 项成功；bun/herdr/wechat 因运行中跳过（连续 3 天）；清理 9 个旧版本 + 缓存 1.1 GB；checkver 全量 exit 0，仅 qoder 报 SSL 握手失败（两次均失败）、utools 8.0.0 报 available；Actions 最近 15 个 run 全 success（最新 Excavator 单项 utools 更新因官方 IA-32 地址 404 失败）；diskgenius 上游/清单一致（6.2.0.1829）。日志：`workdir/auto-update/2026-10-20.md`（10-17 日志缺失，连续占用不跨缺日推算）。
+- **Issues（2026-10-20 核实）**：`gh issue list -R LaelLuo/scoop --state open` 为 **0 条**。历史共 2 条、均已 CLOSED——#3 `workbuddy@5.3.14.36279234: decompress error`（2026-08-30）、#2 `aionui@1.9.7: hash check failed`（2026-04-06，带 `verified` + `hash-fix-needed` 标签）。标签口径：标准 GitHub 标签（bug/question/duplicate/enhancement…）+ 仓库自定义 `verified`（已复现核实）、`hash-fix-needed`（哈希待修）、`review-needed`（待复核）。
 - **2026-10-09 后已收敛的历史遗留**：41 个 src 源追平产物（`6e09170`）、qq-nt 降级隐患（`aba461f`）、codebuddy 检查域名迁移、autoglm 检查去 throw 化+改接口（`0f9036f`）、open-pencil throw（`6993aae`）、bageshuo `${version}` 模板 bug（`3baea25`）、douyin-ide 救活（`1d97e08`）、claude-code/rebased/chatcut/叭哥说等新清单收录。
 
 ## 6. 未决事项与需用户拍板
@@ -107,7 +109,7 @@
 
 ## 7. 以后如何触发这项工作
 
-- **日常**：用户/Lead 说「跑夜巡 / 看昨晚更新 / 检查 Actions / 某个清单挂了」，scoop-steward 按本文 §2、§3 执行，产出写 `workdir/auto-update/<日期>.md` 并简短回报。
+- **日常**：用户/Lead 说「跑夜巡 / 看昨晚更新 / 检查 Actions / 有 issue 了 / 某个清单挂了」，scoop-steward 按本文 §2、§3 执行，产出写 `workdir/auto-update/<日期>.md` 并简短回报。
 - **没有后台循环**：scoop-steward 只在被唤醒（用户消息或 Lead 指派）时执行；不会自动到点运行。若用户希望完全无人值守，需保留 Codex 04:00 automation（推荐，现状）或另设 DSH schedule（要求本会话常驻），见 U1。
 - **紧急/失败**：提供失败日志路径或说「看最新 Actions run」，优先按 §3.1 修复流程；涉及重装、强杀进程、改 remote、改其他仓库等动作先回报等批准。
 
