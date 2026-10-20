@@ -11,6 +11,11 @@
 - 中文/英文双语软件并存，并针对需要登录或多目录数据的应用补充了 post-install 逻辑，开箱即可便携使用。
 - `deprecated/` 用于存放下线的旧版本，方便追溯历史配置。
 
+## 管理资料
+
+目标、用户原话、决策与维护交接不放在本仓库，统一在 Playground 侧的管理库维护：`projects/scoop-admin/`（见 Playground 项目索引）。本仓库只保留面向读者与执行者的内容：清单源与产物、构建脚本、维护 SOP 与安装说明。
+
+
 ## 快速开始
 
 ### 1. 添加 bucket
@@ -48,7 +53,6 @@ Get-ChildItem bucket | Select-Object -ExpandProperty Name
 ## 维护工作流
 
 - [日常巡检与接管范围](docs/maintenance-runbook.md)：每日 04:00 全量更新、清理与健康巡检，异常处理及用户数据边界。
-- [当前新增收录目标](GOALS.md)：Herdr 方案、验收和正式实施放行状态。
 - [Herdr 安装与更新](docs/herdr-installation.md)：命令入口、持久化、已有数据处理与运行前提。
 
 - `bin/checkver.ps1 <manifest> [-u]`：检查或更新清单版本号及下载地址。

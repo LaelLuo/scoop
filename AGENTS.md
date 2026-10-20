@@ -22,6 +22,7 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 ## 仓库定位
 - Scoop AI Tooling Bucket，聚焦 AI IDE、Agent、MCP 工具与开发效率组件。
 - 生产清单位于 `bucket/`，**不可直接编辑**；一切改动需先修改 `src/bucket/*.json[c]`，再执行 `bun scripts/build.ts [--only <manifest>]` 生成产物。
+- 本仓库只放工程侧内容。目标、用户原话、决策与维护交接在管理库 `projects/scoop-admin/`（Playground 侧，独立 git），本仓 README 有入口。
 
 ## 清单规范
 1. **源文件 (`src/bucket`)**

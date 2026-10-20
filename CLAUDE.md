@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 这是一个Scoop bucket项目，专门收录AI开发工具和编辑器的便携化清单。Scoop是Windows包管理器，此bucket包含如Cursor、OOMOL Studio、LM Studio等AI/开发工具的清单文件。
 
+本仓库只承载工程侧内容（清单、脚本、测试）。目标、用户原话、决策与维护交接在 Playground 侧的管理库 `projects/scoop-admin/`，不要在仓库根部新建 GOALS/decisions/user-directives 等管理文档。
+
 ## 核心架构
 
 ### 目录结构
