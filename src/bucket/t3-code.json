@@ -1,0 +1,73 @@
+{
+    "version": "0.1.6",
+    "description": "Desktop control plane for coding agents",
+    "homepage": "https://t3.codes/",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-x64.exe#/dl.7z",
+            "hash": "sha512:2cJYrm77kR/p+h0cIRjimC2T25NJDdsDtAxE4CF3x+cGbom6iyRIHIiknOMTHA4C/Me4jnu//3icBMLP+uvhag==",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-arm64.exe#/dl.7z",
+            "hash": "sha512:dlOyVYMtZTMIyPcdR78A5xfa3tx+r38hNhJmK52cR+h5cUaWIowq/Iq7QEdGaI/xNKIrH5xG9ZRRB9d3IadpPg==",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "T3 Code (Beta).exe",
+            "T3 Code"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "updater",
+                "source": "LocalAppData/t3code-updater",
+                "target": "$persist_dir/local/t3code-updater",
+                "strategy": "symlink",
+                "ensureTarget": true,
+                "targetType": "file"
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "checkver": {
+        "github": "https://api.github.com/repos/pingdotgg/t3code/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[0-9.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pingdotgg/t3code/releases/download/v$version/T3-Code-$version-x64.exe#/dl.7z",
+                "hash": {
+                    "url": "$baseurl/latest.yml",
+                    "regex": "T3-Code-$version-x64\\.exe[\\s\\S]*?sha512:\\s+$base64"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/pingdotgg/t3code/releases/download/v$version/T3-Code-$version-arm64.exe#/dl.7z",
+                "hash": {
+                    "url": "$baseurl/latest.yml",
+                    "regex": "T3-Code-$version-arm64\\.exe[\\s\\S]*?sha512:\\s+$base64"
+                }
+            }
+        }
+    },
+    "notes": [
+        "Use 'scoop update t3-code' to update this package.",
+        "T3 Code also supports in-app updates; those are blocked so Scoop remains the update source.",
+        "The optional 't3' command is enabled separately from T3 Code Settings."
+    ]
+}
