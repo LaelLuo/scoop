@@ -64,7 +64,7 @@ Get-ChildItem bucket | Select-Object -ExpandProperty Name
 ### `src → bucket` 构建流程
 
 - `src/bucket/*.json[c]` 是**源文件**，可在其中使用注释、模板变量，以及新增的 `portableProfile` 字段描述便携化映射（如 `source/target/targetType/migrateFrom`）。
-- `bucket/*.json` 是**构建产物**，`portableProfile` 会在构建时被展开为标准 `post_install` / `pre_uninstall` 脚本。
+- `bucket/*.json` 是**构建产物**，`portableProfile` 默认展开为 `post_install` / `pre_uninstall`；需要在 current 激活前处理数据的清单可通过 `options.preInstall` 将同一专属模块调用前置到各架构 `pre_install`，卸载后清理可用 `options.postUninstall`。
 
 常用命令：
 

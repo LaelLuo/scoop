@@ -30,6 +30,30 @@
     "portableProfile": {
         "mappings": [
             {
+                "label": "home",
+                "source": "UserProfile/.t3",
+                "target": "$persist_dir/home",
+                "strategy": "junction"
+            },
+            {
+                "label": "active-profile",
+                "source": "AppData/t3code-v2",
+                "target": "$persist_dir/roaming/t3code-v2",
+                "strategy": "junction"
+            },
+            {
+                "label": "legacy-alpha-profile",
+                "source": "AppData/T3 Code (Alpha)",
+                "target": "$persist_dir/roaming/T3 Code (Alpha)",
+                "strategy": "junction"
+            },
+            {
+                "label": "legacy-t3code-profile",
+                "source": "AppData/t3code",
+                "target": "$persist_dir/roaming/t3code",
+                "strategy": "junction"
+            },
+            {
                 "label": "updater",
                 "source": "LocalAppData/t3code-updater",
                 "target": "$persist_dir/local/t3code-updater",
@@ -39,7 +63,10 @@
             }
         ],
         "options": {
-            "log": true
+            "log": true,
+            "module": "scripts/t3-code-portable.psm1",
+            "preInstall": true,
+            "postUninstall": true
         }
     },
     "checkver": {

@@ -13,6 +13,8 @@ type PortableProfile = {
     options?: {
         module?: string;
         log?: boolean;
+        preInstall?: boolean;
+        postUninstall?: boolean;
     };
 };
 
@@ -198,6 +200,31 @@ function applyPortableProfile(manifest: Manifest, profile: PortableProfile, pkgN
 
     manifest.post_install = [...postInstall, ...regionLines, ...installInvoke];
     manifest.pre_uninstall = [...preUninstall, ...regionLines, ...uninstallInvoke];
+
+    if (profile.options?.preInstall) {
+        const preInstallBlock = [...regionLines, ...buildInvokeBlock("PreInstall", profile)];
+        injectArchitectureHook(manifest, "pre_install", preInstallBlock, true);
+    }
+
+    if (profile.options?.postUninstall) {
+        const postUninstallBlock = [...regionLines, ...buildInvokeBlock("PostUninstall", profile)];
+        manifest.post_uninstall = [...normalizeScriptField(manifest.post_uninstall), ...postUninstallBlock];
+    }
+}
+
+function injectArchitectureHook(manifest: Manifest, hook: string, block: string[], prepend: boolean) {
+    const architecture = (manifest as any).architecture;
+    if (isPlainObject(architecture)) {
+        for (const arch of Object.values(architecture)) {
+            if (!isPlainObject(arch)) continue;
+            const existing = normalizeScriptField((arch as any)[hook]);
+            (arch as any)[hook] = prepend ? [...block, ...existing] : [...existing, ...block];
+        }
+        return;
+    }
+
+    const existing = normalizeScriptField((manifest as any)[hook]);
+    (manifest as any)[hook] = prepend ? [...block, ...existing] : [...existing, ...block];
 }
 
 function resolveModulePath(moduleValue: string): string {
@@ -354,7 +381,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function buildInvokeBlock(action: "Install" | "Uninstall", profile: PortableProfile): string[] {
+function buildInvokeBlock(action: "Install" | "Uninstall" | "PreInstall" | "PostUninstall", profile: PortableProfile): string[] {
     const mappings = profile.mappings.map(renderMapping); 
     const logFlag = profile.options?.log === false ? "$false" : "$true";
 
