@@ -3,9 +3,9 @@ function Resolve-T3CodePath([string]$Path, [hashtable]$Context) {
     if ($Path -match '^AppData/(.+)$') { return Join-Path $env:APPDATA $matches[1] }
     if ($Path -match '^LocalAppData/(.+)$') { return Join-Path $env:LOCALAPPDATA $matches[1] }
     if ($Path -match '^\$persist_dir[/\\](.+)$') { return Join-Path $Context.PersistDir $matches[1] }
+    if ([IO.Path]::IsPathRooted($Path)) { return [IO.Path]::GetFullPath($Path) }
     throw "Unsupported T3 Code mapping path: $Path"
 }
-
 function Get-T3CodeEntry([string]$Path) {
     try { return Get-Item -LiteralPath $Path -Force -ErrorAction Stop }
     catch {
@@ -253,5 +253,3 @@ function Invoke-PortableMappings {
         if ($Log -and $Action -eq 'PreInstall') { info "[T3 Code Portable] Prepared $($mapping.Label)" }
     }
 }
-
-Export-ModuleMember -Function Invoke-PortableMappings

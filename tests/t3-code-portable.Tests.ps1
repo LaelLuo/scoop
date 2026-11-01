@@ -1,6 +1,6 @@
 BeforeAll {
     $modulePath = Join-Path $PSScriptRoot '..\scripts\t3-code-portable.psm1'
-    Import-Module $modulePath -Force
+    Import-Module $modulePath -Function Invoke-PortableMappings -Force
     $savedEnvironment = @{
         USERPROFILE = $env:USERPROFILE
         APPDATA = $env:APPDATA
@@ -115,6 +115,17 @@ Describe 'T3 Code portable mappings' {
         Invoke-PortableMappings -Action Install -Context $context -Mappings $mappings
         (Get-Item -Force -LiteralPath $first).LinkType | Should -Be 'Junction'
         (Get-Item -Force -LiteralPath $later).LinkType | Should -Be 'Junction'
+    }
+
+    It 'accepts absolute target paths after manifest variable expansion' {
+        $mapping = @{ Label = 'absolute'; Source = 'UserProfile/.t3'; Target = (Join-Path $persistDir 'absolute-home'); Strategy = 'junction'; TargetType = 'directory' }
+        $source = Get-TestPath $mapping.Source
+
+        Invoke-PortableMappings -Action PreInstall -Context $context -Mappings @($mapping)
+        Invoke-PortableMappings -Action Install -Context $context -Mappings @($mapping)
+
+        (Get-Item -Force -LiteralPath $source).LinkType | Should -Be 'Junction'
+        [IO.Path]::GetFullPath((Get-Item -Force -LiteralPath $source).Target) | Should -Be ([IO.Path]::GetFullPath($mapping.Target))
     }
 
     It 'fails closed on conflicting persist data without changing either tree' {
