@@ -6,7 +6,7 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-x64.exe#/dl.7z",
-            "hash": "sha512:2cJYrm77kR/p+h0cIRjimC2T25NJDdsDtAxE4CF3x+cGbom6iyRIHIiknOMTHA4C/Me4jnu//3icBMLP+uvhag==",
+            "hash": "8cff5c90fdc976c0bdef86074a8cde9c3784af8de2091759514cd9f8f1457405",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
@@ -14,7 +14,7 @@
         },
         "arm64": {
             "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-arm64.exe#/dl.7z",
-            "hash": "sha512:dlOyVYMtZTMIyPcdR78A5xfa3tx+r38hNhJmK52cR+h5cUaWIowq/Iq7QEdGaI/xNKIrH5xG9ZRRB9d3IadpPg==",
+            "hash": "4655d6c5ee307145ae046739ca6149004f61eacbbcd4375daf8db7ed5d5afc35",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
@@ -52,15 +52,15 @@
             "64bit": {
                 "url": "https://github.com/pingdotgg/t3code/releases/download/v$version/T3-Code-$version-x64.exe#/dl.7z",
                 "hash": {
-                    "url": "$baseurl/latest.yml",
-                    "regex": "T3-Code-$version-x64\\.exe[\\s\\S]*?sha512:\\s+$base64"
+                    "url": "https://api.github.com/repos/pingdotgg/t3code/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == 'T3-Code-$version-x64.exe')].digest"
                 }
             },
             "arm64": {
                 "url": "https://github.com/pingdotgg/t3code/releases/download/v$version/T3-Code-$version-arm64.exe#/dl.7z",
                 "hash": {
-                    "url": "$baseurl/latest.yml",
-                    "regex": "T3-Code-$version-arm64\\.exe[\\s\\S]*?sha512:\\s+$base64"
+                    "url": "https://api.github.com/repos/pingdotgg/t3code/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == 'T3-Code-$version-arm64.exe')].digest"
                 }
             }
         }
