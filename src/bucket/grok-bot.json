@@ -1,0 +1,76 @@
+{
+    "version": "0.78.5",
+    "description": "Always-on AI agents from xAI and Cursor that work autonomously across your tools and apps.",
+    "homepage": "https://x.ai/bot",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://x.ai/legal/terms-of-service"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://downloads.cursor.com/grokbot/stable/win32-x64/0.78.5/Grok_Bot_0.78.5_Setup.exe#/dl.7z",
+            "hash": "9795a1ff01ad6a765b4413b312fa589087e89c97d4939d038093f089e82475da",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
+        },
+        "arm64": {
+            "url": "https://downloads.cursor.com/grokbot/stable/win32-arm64/0.78.5/Grok_Bot_0.78.5_Setup.exe#/dl.7z",
+            "hash": "22c9573b8b0cdd68067587016bdc779ca18b5c233ea65532ac8f440b5078625e",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\""
+        }
+    },
+    "post_install": "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Recurse -ErrorAction Ignore",
+    "shortcuts": [
+        [
+            "Grok Bot.exe",
+            "Grok Bot"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/Grok Bot",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            },
+            {
+                "label": "programs",
+                "source": "LocalAppData/Programs/Grok Bot",
+                "target": "$persist_dir/programs",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "log": true,
+            "module": "scripts/grok-bot-portable.psm1",
+            "preInstall": true,
+            "postUninstall": true
+        }
+    },
+    "checkver": {
+        "url": "https://api2.cursor.sh/updates/api/update/win32-x64/sand/0.0.0/stable",
+        "jsonpath": "$.version",
+        "regex": "^([\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://downloads.cursor.com/grokbot/stable/win32-x64/$version/Grok_Bot_$version_Setup.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://downloads.cursor.com/grokbot/stable/win32-arm64/$version/Grok_Bot_$version_Setup.exe#/dl.7z"
+            }
+        }
+    },
+    "notes": [
+        "This laelluo package is named grok-bot (same as extras). Prefer: scoop install laelluo/grok-bot. Or uninstall the extras package first, then install.",
+        "Update with: scoop update grok-bot. Turn OFF in-app auto-update (Settings). In-app NSIS updates write under LocalAppData\\Programs\\Grok Bot and can fork versions outside Scoop.",
+        "User data: AppData\\Grok Bot -> persist\\roaming. Programs intercept: LocalAppData\\Programs\\Grok Bot -> persist\\programs.",
+        "Existing ordinary data directories or foreign/broken links STOP install and are preserved. Follow scoop-admin docs/grok-bot-migration.md (quit app, backup/rename, hash verify). No silent delete.",
+        "sand-update-apply-marker.json lives under AppData\\Grok Bot; after roaming is mapped it stays in persist. Clear staged NSIS apply only after quit, if a stale stage remains.",
+        "Install/update/uninstall refuses while Grok Bot.exe is running; Scoop will not kill the process.",
+        "Ordinary uninstall removes owned symlinks only and keeps Scoop persist data."
+    ]
+}
