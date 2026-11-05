@@ -64,13 +64,13 @@
             }
         }
     },
-    "notes": [
+        "notes": [
         "This laelluo package is named grok-bot (same as extras). Prefer: scoop install laelluo/grok-bot. Or uninstall the extras package first, then install.",
-        "Update with: scoop update grok-bot. Turn OFF in-app auto-update (Settings). In-app NSIS updates write under LocalAppData\\Programs\\Grok Bot and can fork versions outside Scoop.",
-        "User data: AppData\\Grok Bot -> persist\\roaming. Programs intercept: LocalAppData\\Programs\\Grok Bot -> persist\\programs.",
-        "Existing ordinary data directories or foreign/broken links STOP install and are preserved. Follow scoop-admin docs/grok-bot-migration.md (quit app, backup/rename, hash verify). No silent delete.",
-        "sand-update-apply-marker.json lives under AppData\\Grok Bot; after roaming is mapped it stays in persist. Clear staged NSIS apply only after quit, if a stale stage remains.",
-        "Install/update/uninstall refuses while Grok Bot.exe is running; Scoop will not kill the process.",
-        "Ordinary uninstall removes owned symlinks only and keeps Scoop persist data."
+        "Quit Grok Bot completely before scoop install/update/uninstall. Scoop will not kill the process.",
+        "Update with: scoop update grok-bot. Turn OFF in-app auto-update (Settings). In-app NSIS updates write under LocalAppData\\Programs\\Grok Bot.",
+        "On install, existing %APPDATA%\\Grok Bot is safely migrated into persist\\roaming (copy + SHA256 verify + rename source to *.scoop-grok-bot-backup). Confirm the app works, then you may delete the backup.",
+        "Existing %LOCALAPPDATA%\\Programs\\Grok Bot that looks like an NSIS/Electron tree is deleted (not copied); a symlink to empty persist\\programs intercepts further NSIS writes.",
+        "If persist\\roaming already has different data while AppData is still an ordinary directory, install refuses to merge.",
+        "Ordinary uninstall removes owned symlinks only; Scoop persist and *.scoop-grok-bot-backup directories are kept."
     ]
 }
