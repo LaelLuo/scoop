@@ -81,7 +81,7 @@ bun scripts/build.ts --only cursor
 ## 测试与自动化
 
 - `ci.yml` 会在 PR / main 分支上执行 Pester 测试与格式校验，阻止异常清单进入主干。
-- `excavator.yml` 与 `bin/auto-pr.ps1` 负责批量检查上游版本并自动创建更新 PR。
+- `excavator.yml` 通过 ScoopInstaller/GithubActions 调 Scoop 本体的 auto-pr 批量检查上游版本并更新清单；`bin/auto-pr.ps1` 仅供本机手动使用。
 
 ## 贡献指南
 
