@@ -67,10 +67,14 @@
         "script": [
             "# Please keep this script. An empty Accept-Encoding header can cause the CDN to deliver expired cache.",
             "# See : https://github.com/ScoopInstaller/Extras/issues/15916",
+            "# Prefer the origin host: cdn-go.cn itself serves stale cache to overseas runners (same origin as Scoop Extras qq-nt).",
+            "# The origin presents a weixin.qq.com certificate, so curl -k skips verification for this single request only; falls back to cdn-go.cn.",
             "$headers = @{ 'Accept-Encoding' = 'gzip' }",
-            "$url = 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js'",
-            "$response = Invoke-WebRequest -Uri $url -UseBasicParsing -Headers $headers",
-            "Write-Output $response.Content"
+            "$content = $null",
+            "$curl = Get-Command curl -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1",
+            "if ($curl) { $content = (& $curl.Source -sSk --max-time 30 -H 'Host: cdn-go.cn' -H 'Accept-Encoding: gzip' --compressed 'https://cdn-go.cn.cloud.tc.qq.com/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js' 2>$null) -join \"`n\" }",
+            "if ($content -notmatch 'QQNT(?:V2)?/[\\d\\.]+/release/') { $content = (Invoke-WebRequest -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js' -UseBasicParsing -Headers $headers).Content }",
+            "Write-Output $content"
         ],
         "regex": "QQNT(?:V2)?/([\\d\\.]+)/release/[0-9a-f]+/QQ_([\\d\\.]+)_([\\d]+)_x86_01\\.exe",
         "replace": "${2}.${3}"

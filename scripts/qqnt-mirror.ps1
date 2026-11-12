@@ -17,9 +17,23 @@ function Emit($k, $v) {
     else { Write-Host "$k=$v" }
 }
 
-try {
+function Get-WindowsConfig {
+    # 优先源站：海外 runner 直连 cdn-go.cn 会拿到陈旧缓存（2026-11 实测停在 9.9.35），
+    # 源站 cdn-go.cn.cloud.tc.qq.com + Host: cdn-go.cn 可取最新（Scoop Extras qq-nt 用过同一做法）。
+    # 源站证书是 weixin.qq.com，与域名不符：curl -k 只作用于这一次请求，不改全局校验；
+    # 取回内容仍须匹配下方 qqdl.gtimg.cn 链接正则，并受防降级保护。源站失败则回退 cdn-go.cn。
+    $curl = Get-Command curl -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($curl) {
+        $content = (& $curl.Source -sSk --max-time 30 -H 'Host: cdn-go.cn' -H 'Accept-Encoding: gzip' --compressed 'https://cdn-go.cn.cloud.tc.qq.com/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js' 2>$null) -join "`n"
+        if ($LASTEXITCODE -eq 0 -and $content -match 'qqdl\.gtimg\.cn/qqfile/QQNT') { return $content }
+        Write-Warning "源站 windowsConfig 请求失败（curl exit=$LASTEXITCODE），回退 cdn-go.cn"
+    }
     $headers = @{ 'Accept-Encoding' = 'gzip' }
-    $content = (Invoke-WebRequest -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js' -UseBasicParsing -Headers $headers).Content
+    (Invoke-WebRequest -Uri 'https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/windowsConfig.js' -UseBasicParsing -Headers $headers).Content
+}
+
+try {
+    $content = Get-WindowsConfig
     $m = [regex]::Match($content, 'https://qqdl\.gtimg\.cn/qqfile/QQNT(?:V2)?/[\d\.]+/release/[0-9a-f]+/QQ_(?<ver3>[\d\.]+)_(?<ver4>[\d]+)_x86_01\.exe')
     if (-not $m.Success) { Write-Error 'windowsConfig 无 QQNT 链接'; Emit 'skip' 'true'; exit 0 }
     $latest = "$($m.Groups['ver3'].Value).$($m.Groups['ver4'].Value)"
