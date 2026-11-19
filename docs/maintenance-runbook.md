@@ -53,9 +53,9 @@
 
 ### 唤醒条件
 
-唤醒：预检失败；断链（基线、更新后、清理后复核任一）；hash 重试后仍失败；更新报错；checkver 有清单报错（重跑后仍报）；清单 available 连续两晚以上；Actions 有失败（后续同名 workflow 已成功恢复的不算）；DiskGenius 遇到验证码或脚本失败；同一软件连续 3 晚因运行中被跳过（`grok-bot` 是 bot 自身守护进程，常驻运行，不计）；脚本自身异常（try/catch 兜底）。
+唤醒：预检失败；断链（基线、更新后、清理后复核任一）；hash 重试后仍失败；更新报错；checkver 有清单报错（重跑后仍报，且不是 SSL/DNS/超时这类本机网络错误）；清单 available 连续两晚以上；Actions 有失败（后续同名 workflow 已成功恢复的不算）；DiskGenius 遇到验证码或脚本失败；同一软件连续 3 晚因运行中被跳过（`grok-bot` 是 bot 自身守护进程，常驻运行，不计）；脚本自身异常（try/catch 兜底）。
 
-不唤醒：只是首晚 available；软件因运行中被跳过（未满 3 晚）；单次网络失败、重跑后成功。
+不唤醒：只是首晚 available；软件因运行中被跳过（未满 3 晚）；单次网络失败、重跑后成功；checkver 的 SSL/DNS/超时类本机网络错误（如 qoder、moonbit，Actions 会照常更新，只记日志）。
 
 ### 唤醒方式（webhook）
 

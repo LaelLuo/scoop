@@ -586,7 +586,13 @@ try {
             $cvNote = "首次有报错（$($first -join '、')），按规则原样重跑一次（只重跑这些清单）；重跑后仍报错 $($cv.Errors.Count) 项。"
         }
         Save-Raw 'checkver' $cv.Lines
-        foreach ($a in $cv.Errors.Keys) { Add-Reason "checkver 报错：$a（$($cv.Errors[$a])）" }
+        # 本机 SSL/DNS/超时类错误多是工作站网络问题（Actions 会照常更新），只记日志不唤醒；其他错误才唤醒。
+        $netErr = @()
+        foreach ($a in $cv.Errors.Keys) {
+            if ($cv.Errors[$a] -match 'SSL|DNS|No such host|timed out|timeout|Name or service not known|无法解析|actively refused') { $netErr += $a }
+            else { Add-Reason "checkver 报错：$a（$($cv.Errors[$a])）" }
+        }
+        if ($netErr.Count) { $cvNote += "网络类错误（$($netErr -join '、')）判为本机网络问题，只记录不唤醒。" }
         $newAvail = @{}
         foreach ($a in $cv.Available.Keys) {
             $n = Get-Nights 'available' $a
