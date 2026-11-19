@@ -31,3 +31,38 @@
 - 原会话全文共 1754 条文本；已读取全部用户需求并核对最近两晚正文和当前任务书。
 - 最新日志：workdir/auto-update/2026-10-09.md；最新维护修复：0f9036f（AutoGLM checkver 直调官方版本 API）。
 - 原会话曾处理的 MicYou 6X 安装已经交付，不属于每天夜巡；新增软件与其他设备操作不随接管自动扩大范围。
+
+## 本地夜巡（2026-11-20 起，计划任务版）
+
+每天 04:00 的夜巡由工作站上的 Windows 计划任务运行脚本 `scripts/nightly-patrol.ps1`，不再占用 Grok Bot 额度。脚本只做确定性步骤，只有出错或有清单需要修时才唤醒 bot。
+
+### 运行方式
+
+- 计划任务：「scoop 夜巡」（若已有同名任务则用「scoop 夜巡 (laelluo)」）。以当前登录用户运行、只在用户登录时运行、不提升权限（与手动操作同权限，能建 SymbolicLink）；每天 04:00，错过后补跑（StartWhenAvailable），执行时限 2 小时，不允许多实例。
+- 动作：`pwsh.exe -NoProfile -ExecutionPolicy Bypass -File E:\Projects\ScoopProjects\scoop\scripts\nightly-patrol.ps1`。脚本必须在 pwsh 7 里跑，Scoop 操作全在该进程内直调 `D:\Scoop\apps\scoop\current\bin\scoop.ps1`，不回退 PS5.1。
+- 手动运行：`pwsh -NoProfile -File scripts\nightly-patrol.ps1`。当天日志已完整（含「本轮完成」）时整轮跳过，重复运行无副作用；日志不完整会改名为 `YYYY-MM-DD.incomplete-HHmmss.md` 后重跑。
+- 测试开关：`-DryRunWake` 只组装 payload 写盘不发送；`-SimulateFailure` 强制走唤醒分支，跳过全部真实操作，日志与 payload 文件带 `.simulated` 后缀，不改 state.json。
+
+### 步骤与产物
+
+1. Git 同步（工作区干净才 `git pull --ff-only origin master`）。2. 同进程 SymbolicLink 预检（文件型、目录型、AppData 卷到 persist 卷的跨卷链接），不过则不更新任何软件。3. 链接基线、`scoop update` 索引、`scoop status`。4. 逐个更新（不用 `update --all`；运行中和 hold 跳过；更新前后核对链接与 persist；hash 失败先 `scoop cache rm` 再重试一次；断链或报错立即停止其余更新）。5. `scoop cleanup '*'` 与 `scoop cache rm '*'`（本轮断链则不做）。6. `bin\checkver.ps1`（不加 -u，有报错原样重跑一次）。7. `gh run list` 与 open issues。8. `scripts\mirror-diskgenius.ps1`。9. 小结与唤醒判定。
+
+- 日志：`workdir/auto-update/YYYY-MM-DD.md`（北京时间日期），原始输出在同名 `raw-YYYY-MM-DD/`。
+- 跨晚状态：`workdir/auto-update/state.json`（available、被跳过的连续晚数；workdir 已被 git 忽略）。
+- 脚本不修清单、不提交；DiskGenius 镜像脚本发现新版时按其既有机制发布并推送。
+
+### 唤醒条件
+
+唤醒：预检失败；断链（基线、更新后、清理后复核任一）；hash 重试后仍失败；更新报错；checkver 有清单报错（重跑后仍报）；清单 available 连续两晚以上；Actions 有失败（后续同名 workflow 已成功恢复的不算）；DiskGenius 遇到验证码或脚本失败；同一软件连续 3 晚因运行中被跳过（`grok-bot` 是 bot 自身守护进程，常驻运行，不计）；脚本自身异常（try/catch 兜底）。
+
+不唤醒：只是首晚 available；软件因运行中被跳过（未满 3 晚）；单次网络失败、重跑后成功。
+
+### 唤醒方式（webhook）
+
+- 配置：`%USERPROFILE%\.config\scoop-nightly\webhook.json`，格式见 `scripts/nightly-patrol.webhook.example.json`（`{"url":"...","headers":{"<名>":"<值>"}}`），该文件不进仓库；url 与 headers 绝不写入日志或 payload 文件。
+- 请求：POST JSON，字段 `date`、`reasons`（数组）、`summary`（日志小结，4000 字以内）、`log_path`。失败重试 3 次。
+- 配置缺失、配置损坏、3 次发送失败或 `-DryRunWake` 时，payload 写到 `workdir/auto-update/pending-wake-YYYY-MM-DD.json`，日志记一笔；需人工补发或让 bot 读取该文件。
+
+### 被唤醒后 bot 的处理
+
+先读 payload 的 `log_path`，对应 `reasons` 逐项处理：清单修复走 `src/bucket` → `bun scripts/build.ts --only <app>` → 验证 → 提交推送；断链/预检失败只报告，不改 Junction、不合并真实目录；其余按本文「执行顺序」与「硬约束」。处理完在看板 task-b1eeada9 记一笔，并向用户报告。
