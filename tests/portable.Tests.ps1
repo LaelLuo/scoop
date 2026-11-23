@@ -141,15 +141,15 @@ Describe 'portable.psm1 symlink mappings' {
         Should -Invoke info -ModuleName portable -ParameterFilter { $Message -like '*Linked*' } -Times 0 -Exactly
     }
 
-    It 'refuses to replace a non-link item at the link path' {
-        Mock Copy-PortableData -ModuleName portable {}
-        Mock Remove-Item -ModuleName portable -ParameterFilter { @($Path) -contains $dirLink } {}
+    It 'migrates a non-link item into persist and keeps a backup' {
         New-Item -ItemType Directory -Path $dirLink -Force | Out-Null
         Set-Content -LiteralPath (Join-Path $dirLink 'settings.json') -Value 'keep' -NoNewline
 
-        { Invoke-PortableMappings -Action Install -Context $fx.Context -Mappings @($dirMapping) } | Should -Throw '*not a link*'
+        Invoke-PortableMappings -Action Install -Context $fx.Context -Mappings @($dirMapping)
 
-        Get-Content -LiteralPath (Join-Path $dirLink 'settings.json') -Raw | Should -Be 'keep'
+        (Get-Item -LiteralPath $dirLink -Force).LinkType | Should -Be 'SymbolicLink'
+        Get-Content -LiteralPath (Join-Path $dirTarget 'settings.json') -Raw | Should -Be 'keep'
+        @(Get-ChildItem -LiteralPath $fx.AppData -Force -Directory | Where-Object Name -like 'MyApp.scoop-portable-backup*').Count | Should -Be 1
     }
 
     It 'links across volumes when SCOOP_PORTABLE_TEST_CROSS_ROOT is set' -Skip:(-not $env:SCOOP_PORTABLE_TEST_CROSS_ROOT) {

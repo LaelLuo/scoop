@@ -1,12 +1,12 @@
 {
-    "version": "0.9.3",
+    "version": "0.9.5",
     "description": "A persistent terminal workspace manager for AI coding agents.",
     "homepage": "https://github.com/herdrdev/herdr",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/herdrdev/herdr/releases/download/v0.9.3/herdr-windows-x86_64.zip",
-            "hash": "c75b1fa49f7a3ba4b8b11789912a6147e4214a3b6fd3556d0f80076c8887d795"
+            "url": "https://github.com/herdrdev/herdr/releases/download/v0.9.5/herdr-windows-x86_64.zip",
+            "hash": "d2c6c9c971c43a0bfdde8c692a9a1a7a45c3e4807cd01ae45662b4734fac1cbf"
         }
     },
     "bin": "herdr.exe",
@@ -71,17 +71,14 @@
                 "strategy": "symlink",
                 "ensureTarget": true
             }
-        ],
-        "options": {
-            "module": "scripts/herdr-portable.psm1"
-        }
+        ]
     },
     "notes": [
         "Install/update from PowerShell 7 (pwsh); non-admin symbolic links require Windows Developer Mode.",
         "Run 'herdr' in a terminal. Update with 'scoop update herdr'.",
         "Do not use 'herdr update' for this installation: its standalone installer creates a separate copy and changes PATH.",
         "Default config and state are persisted from AppData/herdr and LocalAppData/herdr. Ordinary uninstall keeps Scoop persist data.",
-        "Existing data directories or foreign/broken links stop installation and are preserved. Back up and resolve those paths first; no automatic migration is performed.",
+        "Existing data directories are moved into Scoop persist and kept as a backup beside the original path. Foreign or broken links stop installation and are preserved. Confirm the app works before deleting the backup.",
         "XDG_CONFIG_HOME, XDG_STATE_HOME and HERDR_CONFIG_PATH overrides are respected; custom data paths remain user-managed."
     ],
     "checkver": {
