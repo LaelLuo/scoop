@@ -1,10 +1,10 @@
 {
-    "version": "4.12.0.37847260",
+    "version": "4.12.4.43368774",
     "description": "腾讯云代码助手 CodeBuddy - AI 时代的智能编程伙伴，集成设计到开发的全栈 IDE",
-    "homepage": "https://www.codebuddy.ai/",
+    "homepage": "https://www.codebuddy.cn/",
     "license": {
         "identifier": "Proprietary",
-        "url": "https://www.codebuddy.ai/genie/document/privacyPolicy"
+        "url": "https://www.codebuddy.cn/genie/document/privacyPolicy"
     },
     "notes": [
         "CodeBuddy 是腾讯云推出的 AI 驱动的全栈开发 IDE，主要功能：",
@@ -20,8 +20,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://codebuddy-1328495429.cos.accelerate.myqcloud.com/aiide/win32-x64-user/CodeBuddy-win32-x64-user-4.12.0.37847260-b4c35ed0.exe",
-            "hash": "907039abeca528622699b9705c1a3591f3a22fd0c58e60c4c5dbf00f4a0b8f6e"
+            "url": "https://download.codebuddy.cn/aiide/win32-x64-user/CodeBuddy-win32-x64-user-4.12.4.43368774-62ef1801-cn.exe",
+            "hash": "849dc688336da8d79f12faef59fedc12a29935ecd922bdadb53e7591b4c9e3c9"
         }
     },
     "innosetup": true,
