@@ -18,11 +18,9 @@
            "target": "$persist_dir/roaming",
            "strategy": "symlink",
            "ensureTarget": true,
-           "migrateFrom": ["$dir/data"],
            "targetType": "directory"
          }
        ],
-       "cleanup": { "removeAfterMigrate": ["$dir/data"] },
        "options": { "log": true }
      }
      ```
