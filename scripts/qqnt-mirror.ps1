@@ -35,17 +35,25 @@ function Get-WindowsConfig {
 try {
     $content = Get-WindowsConfig
     $m = [regex]::Match($content, 'https://qqdl\.gtimg\.cn/qqfile/QQNT(?:V2)?/[\d\.]+/release/[0-9a-f]+/QQ_(?<ver3>[\d\.]+)_(?<ver4>[\d]+)_x86_01\.exe')
-    if (-not $m.Success) { Write-Error 'windowsConfig 无 QQNT 链接'; Emit 'skip' 'true'; exit 0 }
+    if (-not $m.Success) {
+        Write-Host 'SKIP reason=windowsConfig 无 QQNT 下载链接（上游页面结构变化或 CDN 内容异常）'
+        Write-Error 'windowsConfig 无 QQNT 链接'
+        Emit 'skip' 'true'; exit 0
+    }
     $latest = "$($m.Groups['ver3'].Value).$($m.Groups['ver4'].Value)"
 
     $manifestPath = Join-Path $Root 'src/bucket/qq-nt.json'
     $current = (Get-Content $manifestPath -Raw | ConvertFrom-Json).version
-    if ($latest -eq $current) { Emit 'skip' 'true'; exit 0 }
+    if ($latest -eq $current) {
+        Write-Host "SKIP reason=版本相同（上游 $latest = 清单 $current），无需更新"
+        Emit 'skip' 'true'; exit 0
+    }
 
     # 防降级：windowsConfig.js 的 CDN 会间歇返回陈旧缓存（2026-09-18 实测返回过老版本 9.9.33），
     # 检测结果比清单还旧时视为脏数据，跳过本轮等下个周期。
     try {
         if ([version]$latest -lt [version]$current) {
+            Write-Host "SKIP reason=防降级（上游 $latest 低于清单 $current，判定 CDN 陈旧缓存）"
             Write-Warning "检测版本 $latest 低于清单版本 $current，判定为 CDN 陈旧缓存，跳过"
             Emit 'skip' 'true'; exit 0
         }
@@ -58,7 +66,11 @@ try {
         -Method Post -ContentType 'application/json' `
         -Headers @{ 'x-oidb' = '{"uint32_command":"0x9b8e","uint32_service_type":1}' } `
         -Body (@{ url = $bare } | ConvertTo-Json -Compress)
-    if ($sign.retcode -ne 0 -or -not $sign.data.url) { Write-Error "GetSign 失败 retcode=$($sign.retcode)"; Emit 'skip' 'true'; exit 0 }
+    if ($sign.retcode -ne 0 -or -not $sign.data.url) {
+        Write-Host "SKIP reason=GetSign 签名失败（retcode=$($sign.retcode)，未拿到签名 URL）"
+        Write-Error "GetSign 失败 retcode=$($sign.retcode)"
+        Emit 'skip' 'true'; exit 0
+    }
 
     $dir = Join-Path $Root 'workdir/qqnt-mirror'
     New-Item -ItemType Directory -Force -Path $dir | Out-Null
@@ -69,6 +81,7 @@ try {
     Emit 'hash' ((Get-FileHash $file -Algorithm SHA256).Hash.ToLower())
     Emit 'file' $file
 } catch {
+    Write-Host "SKIP reason=检测/下载异常（$($_.Exception.Message)）"
     Write-Error "qqnt-mirror 检测下载失败: $_"
     Emit 'skip' 'true'
     exit 0
