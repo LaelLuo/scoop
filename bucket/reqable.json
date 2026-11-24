@@ -7,8 +7,8 @@
         "url": "https://reqable.com/en-US/docs/license/"
     },
     "notes": [
-        "Free community version: almost all features are free, but the number of usage is limited.",
-        "For commercial use, you need to purchase a license."
+        "免费社区版几乎包含全部功能，但使用次数有限。",
+        "商用需要购买许可证。"
     ],
     "architecture": {
         "64bit": {

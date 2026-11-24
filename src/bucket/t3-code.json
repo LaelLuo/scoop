@@ -86,8 +86,8 @@
         }
     },
     "notes": [
-        "Use 'scoop update t3-code' to update this package.",
-        "T3 Code also supports in-app updates; those are blocked so Scoop remains the update source.",
-        "The optional 't3' command is enabled separately from T3 Code Settings."
+        "更新请用 scoop update t3-code。",
+        "T3 Code 也支持应用内更新，但这里已阻断，以便继续由 Scoop 管理更新。",
+        "可选的 t3 命令需要在 T3 Code 设置中单独启用。"
     ]
 }

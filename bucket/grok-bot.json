@@ -346,13 +346,13 @@
         }
     },
     "notes": [
-        "This laelluo package is named grok-bot (same as extras). Prefer: scoop install laelluo/grok-bot. Or uninstall the extras package first, then install.",
-        "Quit Grok Bot completely before scoop install/update/uninstall. Scoop will not kill the process.",
-        "Update with: scoop update grok-bot. Turn OFF in-app auto-update (Settings).",
-        "On install, existing %APPDATA%\\Grok Bot is migrated into persist\\roaming with relative path and file size verification; the original is renamed to *.scoop-portable-backup. Confirm the app works, then you may delete the backup.",
-        "%LOCALAPPDATA%\\Programs\\Grok Bot is intercepted by a file symlink to persist\\programs\\grok-bot-updater-blocker. Any existing directory at that path is treated as a stale NSIS updater tree and deleted; it is not user data.",
-        "If persist\\roaming already has different data while AppData is still an ordinary directory, install refuses to merge.",
-        "Ordinary uninstall removes owned symlinks only; Scoop persist and *.scoop-portable-backup directories are kept."
+        "本 laelluo 包与 extras 同名，都叫 grok-bot。建议用 scoop install laelluo/grok-bot，或先卸载 extras 再安装。",
+        "安装、更新、卸载前请完全退出 Grok Bot；Scoop 不会杀进程。",
+        "更新请用 scoop update grok-bot，并在设置里关闭应用内自动更新。",
+        "安装时，已有的 %APPDATA%\\Grok Bot 会按相对路径和文件大小核对后迁移到 persist\\roaming，原位置改名为 *.scoop-portable-backup。确认应用正常后可删除备份。",
+        "%LOCALAPPDATA%\\Programs\\Grok Bot 会由指向 persist\\programs\\grok-bot-updater-blocker 的文件符号链接接管。该位置已有的真实目录会被当作旧 NSIS 更新树删除；它不是用户数据。",
+        "如果 AppData 仍是普通目录而 persist\\roaming 已有不同数据，安装会拒绝合并。",
+        "普通卸载只移除本清单创建的符号链接；Scoop persist 和 *.scoop-portable-backup 备份保留。"
     ],
     "pre_uninstall": [
         "#region scoop-portable-profile",
