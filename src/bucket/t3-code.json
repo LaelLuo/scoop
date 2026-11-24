@@ -1,20 +1,20 @@
 {
-    "version": "0.1.6",
+    "version": "0.1.11",
     "description": "Desktop control plane for coding agents",
     "homepage": "https://t3.codes/",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-x64.exe#/dl.7z",
-            "hash": "8cff5c90fdc976c0bdef86074a8cde9c3784af8de2091759514cd9f8f1457405",
+            "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.11/T3-Code-0.1.11-x64.exe#/dl.7z",
+            "hash": "e54516240a74dccc099b878a5d0740b071e6796970c981c470c61ba2b337bfd6",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
             ]
         },
         "arm64": {
-            "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.6/T3-Code-0.1.6-arm64.exe#/dl.7z",
-            "hash": "4655d6c5ee307145ae046739ca6149004f61eacbbcd4375daf8db7ed5d5afc35",
+            "url": "https://github.com/pingdotgg/t3code/releases/download/v0.1.11/T3-Code-0.1.11-arm64.exe#/dl.7z",
+            "hash": "74331c9b3c0ddce0a3d65b60d094dacb59ae0dd05049e31dce204f84c9d29a0c",
             "pre_install": [
                 "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\"",
                 "Remove-Item \"$dir\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
@@ -32,26 +32,22 @@
             {
                 "label": "home",
                 "source": "UserProfile/.t3",
-                "target": "$persist_dir/home",
-                "strategy": "junction"
+                "target": "$persist_dir/home"
             },
             {
                 "label": "active-profile",
                 "source": "AppData/t3code-v2",
-                "target": "$persist_dir/roaming/t3code-v2",
-                "strategy": "junction"
+                "target": "$persist_dir/roaming/t3code-v2"
             },
             {
                 "label": "legacy-alpha-profile",
                 "source": "AppData/T3 Code (Alpha)",
-                "target": "$persist_dir/roaming/T3 Code (Alpha)",
-                "strategy": "junction"
+                "target": "$persist_dir/roaming/T3 Code (Alpha)"
             },
             {
                 "label": "legacy-t3code-profile",
                 "source": "AppData/t3code",
-                "target": "$persist_dir/roaming/t3code",
-                "strategy": "junction"
+                "target": "$persist_dir/roaming/t3code"
             },
             {
                 "label": "updater",
@@ -63,10 +59,7 @@
             }
         ],
         "options": {
-            "log": true,
-            "module": "scripts/t3-code-portable.psm1",
-            "preInstall": true,
-            "postUninstall": true
+            "log": true
         }
     },
     "checkver": {
