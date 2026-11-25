@@ -16,14 +16,16 @@
     "shortcuts": [
         [
             "Cindy.exe",
-            "Cindy"
+            "Cindy",
+            "--user-data-dir=\"$dir\\..\\..\\..\\persist\\cindy\\roaming\""
         ]
     ],
     "notes": [
         "这是 Cindy 国际版（global）构建，默认连接官方国际区云服务。中国区账号请安装 cindy-cn。",
         "跨设备续接、记忆和 Skills 同步依赖官方账号；选择 Skip Sign-In 时这些服务端能力不可用。",
         "项目文件留在原机器，不是整盘同步。请用 scoop update cindy 更新。",
-        "国际版的 Electron userData 是 %APPDATA%\\CindyGlobal。便携化会把该目录映射到 Scoop persist，两个版本不要同时安装。"
+        "国际版 Electron userData 是 %APPDATA%\\CindyGlobal；应用还会把共享技能写入 %APPDATA%\\Cindy。便携化会把这两处分别映射到各自 Scoop persist；不要与 cindy-cn 同时安装。",
+        "国际版快捷方式带 --user-data-dir 参数指向 Scoop persist；直接运行 Cindy.exe 时请自行带同一参数，否则不会进入 persist。"
     ],
     "checkver": {
         "github": "https://github.com/makecindy/cindy"
@@ -330,7 +332,9 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/CindyGlobal'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/CindyGlobal'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'shared-skills'; Source = 'AppData/Cindy/shared-system-skills'; Target = \"$persist_dir/shared/system-skills\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'shared-skill-locks'; Source = 'AppData/Cindy/shared-skill-mutation-locks'; Target = \"$persist_dir/shared/skill-mutation-locks\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
         ") -Log:$true"
     ],
     "pre_uninstall": [
@@ -628,7 +632,9 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/CindyGlobal'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/CindyGlobal'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'shared-skills'; Source = 'AppData/Cindy/shared-system-skills'; Target = \"$persist_dir/shared/system-skills\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'shared-skill-locks'; Source = 'AppData/Cindy/shared-skill-mutation-locks'; Target = \"$persist_dir/shared/skill-mutation-locks\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
         ") -Log:$true"
     ]
 }
