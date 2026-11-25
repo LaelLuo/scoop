@@ -1,0 +1,57 @@
+{
+    "version": "0.4.1150",
+    "description": "A powerful harness of its own, and the best herdr GUI.",
+    "homepage": "https://alma.now",
+    "license": "Proprietary",
+    "notes": [
+        "本清单复制自 extras/alma，目的是加入 portableProfile 便携化。",
+        "桌面端默认数据目录是 %APPDATA%\\alma；便携化会把该目录映射到 Scoop persist。",
+        "请在设置中手动关闭 Alma 的应用内自动更新，并用 scoop update alma 更新，避免更新器把程序装到意外位置。"
+    ],
+    "suggest": {
+        "herdr": "herdr"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/yetone/alma-releases/releases/download/v0.4.1150/alma-0.4.1150-win-x64.exe#/dl.7z",
+            "hash": "sha512:eef2069ca3f7cdef479c8143ee14cb2068ad645474b64f77230bb25353c88092679e420d5badfea5540178831db4acd7a1d745208cfa3ee494f0c1f7e232c85b"
+        }
+    },
+    "pre_install": [
+        "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\Uninstall*\" -Force -Recurse -ErrorAction SilentlyContinue"
+    ],
+    "shortcuts": [
+        [
+            "Alma.exe",
+            "Alma"
+        ]
+    ],
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/alma",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ],
+        "options": {
+            "log": true
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/yetone/alma-releases"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yetone/alma-releases/releases/download/v$version/alma-$version-win-x64.exe#/dl.7z"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/latest.yml",
+            "regex": "(?s)$basename.*?sha512: $base64"
+        }
+    }
+}
