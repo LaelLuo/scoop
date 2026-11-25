@@ -1,0 +1,52 @@
+{
+    "version": "1.4.274",
+    "description": "The next-gen IDE for working with a fleet of parallel agents.",
+    "homepage": "https://onorca.dev",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/stablyai/orca/releases/download/v1.4.274/orca-windows-setup.exe#/dl.7z",
+            "hash": "sha512:daa91db268237463650e52b3f81ad8d730a0be663cbeacb1e9eafc8a9093d850fa5bbb02a5753844c55249e2e0301cb3388ab5062e83e447c85a83eff04e1666",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\`$R0\", \"$dir\\*.nsi\" -Recurse"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "Orca.exe",
+            "Orca"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/stablyai/orca"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/stablyai/orca/releases/download/v$version/orca-windows-setup.exe#/dl.7z"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/latest.yml",
+            "regex": "sha512:\\s+$base64"
+        }
+    },
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/Orca",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ]
+    },
+    "notes": [
+        "本清单复制自 extras/orca-ide，目的是加入 portableProfile 便携化。",
+        "Electron userData 默认是 %APPDATA%\\Orca；这里是 stablyai/orca，不是 Microsoft Orca。",
+        "便携化会把该目录映射到 Scoop persist；请用 scoop update orca-ide 更新，并尽量关闭应用内自动更新。"
+    ]
+}

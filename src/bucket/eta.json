@@ -15,7 +15,8 @@
         "在终端运行 eta-host，然后用浏览器打开 http://127.0.0.1:8787 。数据目录是 %USERPROFILE%\\.eta。",
         "官方桌面端仍是实验性预发布，本清单未收录。Windows 上官方不支持受限沙箱。",
         "首次使用需在设置里添加模型源（订阅设备码或 OpenAI 兼容接口）。记忆功能需要按官方文档另配 sidecar，普通对话里不一定能直接看到。",
-        "请用 scoop update eta 更新；不要依赖应用内自动更新。"
+        "请用 scoop update eta 更新；不要依赖应用内自动更新。",
+        "便携化会把 %USERPROFILE%\\.eta 映射到 Scoop persist；若安装时该目录正被 Eta 占用，安装会失败或跳过迁移，需先自行关闭占用程序。"
     ],
     "checkver": {
         "github": "https://github.com/0xfe-project/eta"
@@ -29,5 +30,16 @@
                 }
             }
         }
+    },
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "home",
+                "source": "UserProfile/.eta",
+                "target": "$persist_dir/home",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ]
     }
 }

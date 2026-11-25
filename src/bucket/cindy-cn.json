@@ -23,7 +23,8 @@
         "这是 Cindy 中国区（cn）构建，默认连接官方中国区云服务。国际区账号请安装 cindy。",
         "不要与 cindy（国际版）同时安装，以免快捷方式和数据目录冲突。",
         "跨设备续接、记忆和 Skills 同步依赖官方账号；选择 Skip Sign-In 时这些服务端能力不可用。",
-        "请用 scoop update cindy-cn 更新。"
+        "请用 scoop update cindy-cn 更新。",
+        "中国区版的 Electron userData 是 %APPDATA%\\Cindy。便携化会把该目录映射到 Scoop persist，两个版本不要同时安装。"
     ],
     "checkver": {
         "github": "https://github.com/makecindy/cindy"
@@ -34,5 +35,16 @@
                 "url": "https://github.com/makecindy/cindy/releases/download/v$version/cindy-$version-win32-x64-cn.exe#/dl.7z"
             }
         }
+    },
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/Cindy",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ]
     }
 }

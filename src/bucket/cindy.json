@@ -22,7 +22,8 @@
     "notes": [
         "这是 Cindy 国际版（global）构建，默认连接官方国际区云服务。中国区账号请安装 cindy-cn。",
         "跨设备续接、记忆和 Skills 同步依赖官方账号；选择 Skip Sign-In 时这些服务端能力不可用。",
-        "项目文件留在原机器，不是整盘同步。请用 scoop update cindy 更新。"
+        "项目文件留在原机器，不是整盘同步。请用 scoop update cindy 更新。",
+        "国际版的 Electron userData 是 %APPDATA%\\CindyGlobal。便携化会把该目录映射到 Scoop persist，两个版本不要同时安装。"
     ],
     "checkver": {
         "github": "https://github.com/makecindy/cindy"
@@ -33,5 +34,16 @@
                 "url": "https://github.com/makecindy/cindy/releases/download/v$version/cindy-$version-win32-x64-global.exe#/dl.7z"
             }
         }
+    },
+    "portableProfile": {
+        "mappings": [
+            {
+                "label": "roaming",
+                "source": "AppData/CindyGlobal",
+                "target": "$persist_dir/roaming",
+                "strategy": "symlink",
+                "ensureTarget": true
+            }
+        ]
     }
 }
