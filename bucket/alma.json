@@ -1,5 +1,5 @@
 {
-    "version": "0.4.1153",
+    "version": "0.4.1166",
     "description": "A powerful harness of its own, and the best herdr GUI.",
     "homepage": "https://alma.now",
     "license": "Proprietary",
@@ -15,13 +15,11 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/yetone/alma-releases/releases/download/v0.4.1153/alma-0.4.1153-win-x64.exe#/dl.7z",
-            "hash": "sha512:4cf9c948cd0dbce6a6c7d160e3a7d364a73f945764138dd4846cbba36b08f0c32288233f6483845368c589fa616dd4d022ee7e086fcf0eb8efda6f6cc98fe644"
+            "url": "https://github.com/yetone/alma-releases/releases/download/v0.4.1166/alma-0.4.1166-win-x64.exe#/dl.7z",
+            "hash": "sha512:c4e226c59a5954f4dfd6ed37e54e889b0c9ca383219bd7830004a4966c9060be292c4a03b5a8d8861a211d476a05ad322f98c0bb233b76dd0e57e3051a3077e7"
         }
     },
-    "pre_install": [
-        "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\Uninstall*\" -Force -Recurse -ErrorAction SilentlyContinue"
-    ],
+    "pre_install": "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\Uninstall*\" -Force -Recurse -ErrorAction SilentlyContinue",
     "shortcuts": [
         [
             "Alma.exe",
