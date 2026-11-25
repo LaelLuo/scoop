@@ -1,11 +1,13 @@
 {
-    "version": "0.4.1152",
+    "version": "0.4.1153",
     "description": "A powerful harness of its own, and the best herdr GUI.",
     "homepage": "https://alma.now",
     "license": "Proprietary",
     "notes": [
         "本清单复制自 extras/alma，目的是加入 portableProfile 便携化。",
         "桌面端默认数据目录是 %APPDATA%\\alma；便携化会把该目录映射到 Scoop persist。",
+        "%USERPROFILE%\\.alma\\activity-records 是运行时活动记录目录，便携化会映射到 Scoop persist。",
+        "%LOCALAPPDATA%\\alma\\bin\\alma.cmd 是指向当前安装树的 CLI 包装命令，安装/更新时重建，卸载时清除。",
         "请在设置中手动关闭 Alma 的应用内自动更新，并用 scoop update alma 更新，避免更新器把程序装到意外位置。"
     ],
     "suggest": {
@@ -13,8 +15,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/yetone/alma-releases/releases/download/v0.4.1152/alma-0.4.1152-win-x64.exe#/dl.7z",
-            "hash": "sha512:e6f70f061f3fd03e05afc87da2a046b71e5c49cd2a6d78f3057643ba1b86c3239ea1872f49143ce1d42eb07b3b800e2574ad7e62724b956f987ea4b730913979"
+            "url": "https://github.com/yetone/alma-releases/releases/download/v0.4.1153/alma-0.4.1153-win-x64.exe#/dl.7z",
+            "hash": "sha512:4cf9c948cd0dbce6a6c7d160e3a7d364a73f945764138dd4846cbba36b08f0c32288233f6483845368c589fa616dd4d022ee7e086fcf0eb8efda6f6cc98fe644"
         }
     },
     "pre_install": [
@@ -26,21 +28,15 @@
             "Alma"
         ]
     ],
-    "checkver": {
-        "github": "https://github.com/yetone/alma-releases"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/yetone/alma-releases/releases/download/v$version/alma-$version-win-x64.exe#/dl.7z"
-            }
-        },
-        "hash": {
-            "url": "$baseurl/latest.yml",
-            "regex": "(?s)$basename.*?sha512: $base64"
-        }
-    },
     "post_install": [
+        "$wrapperDir = Join-Path $env:LocalAppData 'alma\\bin'",
+        "$wrapper = Join-Path $wrapperDir 'alma.cmd'",
+        "if (-not (Test-Path -LiteralPath $wrapperDir)) { New-Item -ItemType Directory -Path $wrapperDir -Force | Out-Null }",
+        "$bunExe = Join-Path $dir 'alma-server\\resources\\bun\\bun.exe'",
+        "$cli = Join-Path $dir 'alma-server\\resources\\cli\\alma'",
+        "$wrapperLine = '\"' + $bunExe + '\" \"' + $cli + '\" %*'",
+        "$currentLine = (Get-Content -LiteralPath $wrapper -Raw -ErrorAction SilentlyContinue) -replace '\\r?\\n$', ''",
+        "if ($currentLine -ne $wrapperLine) { $wrapperLine | Set-Content -LiteralPath $wrapper -Encoding ASCII -Force; info '[Portable Mode] Refreshed Alma CLI wrapper' }",
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",
         "# 说明：构建阶段会把该文件的内容内联进 post_install/pre_uninstall。",
@@ -335,9 +331,39 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Install -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/alma'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/alma'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'home-activity-records'; Source = 'UserProfile/.alma/activity-records'; Target = \"$persist_dir/home/activity-records\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
         ") -Log:$true"
     ],
+    "post_uninstall": [
+        "$wrapperDir = Join-Path $env:LocalAppData 'alma\\bin'",
+        "$wrapper = Join-Path $wrapperDir 'alma.cmd'",
+        "if (Test-Path -LiteralPath $wrapper) {",
+        "  $bunExe = Join-Path $dir 'alma-server\\resources\\bun\\bun.exe'",
+        "  $cli = Join-Path $dir 'alma-server\\resources\\cli\\alma'",
+        "  $wrapperLine = '\"' + $bunExe + '\" \"' + $cli + '\" %*'",
+        "  $current = (Get-Content -LiteralPath $wrapper -Raw -ErrorAction SilentlyContinue) -replace '\\r?\\n$', ''",
+        "  $currentLine = if ($current -and $current.Contains(\"`n\")) { (($current -split \"`n\", 2)[1] -replace '\\r$', '') } else { $current }",
+        "  if ($currentLine -like '*alma-server*resources*bun*bun.exe*alma-server*resources*cli*alma*%*') { Remove-Item -LiteralPath $wrapper -Force; info '[Portable Mode] Removed Alma CLI wrapper' }",
+        "}",
+        "if ((Test-Path -LiteralPath $wrapperDir) -and -not (Get-ChildItem -LiteralPath $wrapperDir -Force)) { Remove-Item -LiteralPath $wrapperDir -Force }",
+        "$localAlmaDir = Join-Path $env:LocalAppData 'alma'",
+        "if ((Test-Path -LiteralPath $localAlmaDir) -and -not (Get-ChildItem -LiteralPath $localAlmaDir -Force)) { Remove-Item -LiteralPath $localAlmaDir -Force }"
+    ],
+    "checkver": {
+        "github": "https://github.com/yetone/alma-releases"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yetone/alma-releases/releases/download/v$version/alma-$version-win-x64.exe#/dl.7z"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/latest.yml",
+            "regex": "(?s)$basename.*?sha512: $base64"
+        }
+    },
     "pre_uninstall": [
         "#region scoop-portable-profile",
         "# Portable profile helpers for Scoop manifests.",
@@ -633,7 +659,8 @@
         "}",
         "#endregion",
         "Invoke-PortableMappings -Action Uninstall -Context @{ Dir = $dir; PersistDir = $persist_dir } -Mappings @(",
-        "    @{ Label = 'roaming'; Source = 'AppData/alma'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
+        "    @{ Label = 'roaming'; Source = 'AppData/alma'; Target = \"$persist_dir/roaming\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' },",
+        "    @{ Label = 'home-activity-records'; Source = 'UserProfile/.alma/activity-records'; Target = \"$persist_dir/home/activity-records\"; Strategy = 'symlink'; EnsureTarget = $true; TargetType = 'directory' }",
         ") -Log:$true"
     ]
 }
