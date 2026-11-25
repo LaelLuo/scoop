@@ -1,0 +1,37 @@
+{
+    "version": "0.1.145",
+    "description": "An open-source, out-of-the-box AI agent. Cross-device sessions stay on the original machine.",
+    "homepage": "https://cindy.app",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/makecindy/cindy/releases/download/v0.1.145/cindy-0.1.145-win32-x64-global.exe#/dl.7z",
+            "hash": "9f7ed6736544b8f8595e8baefd56994eab6f8e7e60302b5ee38897c85a911283",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\*.nsi\" -Recurse -ErrorAction SilentlyContinue"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "Cindy.exe",
+            "Cindy"
+        ]
+    ],
+    "notes": [
+        "这是 Cindy 国际版（global）构建，默认连接官方国际区云服务。中国区账号请安装 cindy-cn。",
+        "跨设备续接、记忆和 Skills 同步依赖官方账号；选择 Skip Sign-In 时这些服务端能力不可用。",
+        "项目文件留在原机器，不是整盘同步。请用 scoop update cindy 更新。"
+    ],
+    "checkver": {
+        "github": "https://github.com/makecindy/cindy"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/makecindy/cindy/releases/download/v$version/cindy-$version-win32-x64-global.exe#/dl.7z"
+            }
+        }
+    }
+}
