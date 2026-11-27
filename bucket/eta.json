@@ -1,12 +1,12 @@
 {
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "An open-source workbench for always-on agents. One process, one SQLite file.",
     "homepage": "https://eta.0xfe.tech",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/0xfe-project/eta/releases/download/v0.4.0/eta-host-windows-x64.exe#/eta-host.exe",
-            "hash": "eb62a09908ad750aafda40dba8e2c5695100f4775576b6f21bb1e00fbbc73351"
+            "url": "https://github.com/0xfe-project/eta/releases/download/v0.5.0/eta-host-windows-x64.exe#/eta-host.exe",
+            "hash": "0da908ea3abc675a5bca9221a351532347a8fb8b305e5efd7084bee69a0aeeaf"
         }
     },
     "bin": "eta-host.exe",
